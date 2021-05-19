@@ -1,0 +1,56 @@
+From 36c24f6067590fb8facd775e5d54751e4a50e5f1 Mon Sep 17 00:00:00 2001
+From: isagues <isagues@itba.edu.ar>
+Date: Wed, 12 May 2021 12:58:30 -0300
+Subject: [PATCH 2/2] Soporte en Makefile para interrupciones
+
+Signed-off-by: isagues <isagues@itba.edu.ar>
+---
+ Kernel/Makefile | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Kernel/Makefile b/Kernel/Makefile
+index 70cdbeb..4b31f9b 100644
+--- a/Kernel/Makefile
++++ b/Kernel/Makefile
+@@ -2,21 +2,27 @@ include Makefile.inc
+ 
+ KERNEL=kernel.bin
+ SOURCES=$(wildcard *.c)
++SOURCES_INTERRUPTIONS=$(wildcard interruptions/*.c)
++SOURCES_INTERRUPTIONS_ASM=$(wildcard interruptions/*.asm)
+ SOURCES_ASM=$(wildcard asm/*.asm)
+ OBJECTS=$(SOURCES:.c=.o)
++OBJECTS_INTERRUPTIONS=$(SOURCES_INTERRUPTIONS:.c=.o)
++OBJECTS_INTERRUPTIONS_ASM=$(SOURCES_INTERRUPTIONS_ASM:.asm=.o)
+ OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
+ LOADERSRC=loader.asm
+ 
+ LOADEROBJECT=$(LOADERSRC:.asm=.o)
+ STATICLIBS=
+ 
++ALL_OBJECTS= $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(OBJECTS_INTERRUPTIONS) $(OBJECTS_INTERRUPTIONS_ASM)
++
+ all: $(KERNEL)
+ 
+-$(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM)
+-	$(LD) $(LDFLAGS) -T kernel.ld -o $(KERNEL) $(LOADEROBJECT) $(OBJECTS) $(OBJECTS_ASM) $(STATICLIBS)
++$(KERNEL): $(STATICLIBS) $(ALL_OBJECTS)
++	$(LD) $(LDFLAGS) -T kernel.ld -o $@ $^
+ 
+ %.o: %.c
+-	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
++	$(GCC) $(GCCFLAGS) -I./include -I./interruptions -c $< -o $@
+ 
+ %.o : %.asm
+ 	$(ASM) $(ASMFLAGS) $< -o $@
+@@ -25,6 +31,6 @@ $(LOADEROBJECT):
+ 	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
+ 
+ clean:
+-	rm -rf asm/*.o *.o *.bin
++	rm -rf $(ALL_OBJECTS) *.bin
+ 
+ .PHONY: all clean
+-- 
+2.30.2
+
