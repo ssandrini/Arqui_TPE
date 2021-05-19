@@ -15,6 +15,8 @@ GLOBAL _irq05Handler
 
 GLOBAL _exception0Handler
 
+GLOBAL _getKey
+
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 
@@ -148,6 +150,16 @@ haltcpu:
 	hlt
 	ret
 
+_getKey:
+	push rbp
+    mov rbp, rsp
+    mov rax,0
+
+    in al, 0x60
+       
+    mov rsp, rbp
+    pop rbp
+    ret
 
 
 SECTION .bss
