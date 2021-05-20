@@ -1,5 +1,5 @@
 #include <keyboard.h>
-
+#include <naiveConsole.h>
 #define LEFT_SHIFT 0x2A
 #define RIGHT_SHIFT 0x36
 #define LEFT_CONTROL 0x1D
@@ -44,8 +44,10 @@ void keyboard_handler()
             break;
         default:
             if(key < 0x56) {
+                
                 buffer[buffIndex++] = getAscii(key);
                 buffer[buffIndex] = 0;
+                ncPrintChar(getAscii(key), 13);
             }
             break;
     }

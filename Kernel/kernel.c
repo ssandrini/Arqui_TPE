@@ -85,6 +85,8 @@ void * initializeKernelBinary()
 
 int main()
 {	
+	load_idt();
+	
 	//ncPrint("[Kernel Main]");
 	ncNewline();
 	//ncPrint("  Sample code module at 0x");
@@ -104,7 +106,8 @@ int main()
 
 	//ncPrint("[Finished]");
 
-	load_idt();
+	
+	/*
 	while (1)
 	{
 		if(getBufferSize() == 10) {
@@ -112,6 +115,7 @@ int main()
 			removeBuffer();
 		}
 	}
+	*/
 	
 	return 0;
 }

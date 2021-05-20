@@ -168,7 +168,10 @@ _int80Handler:
 	push rbp
 	mov rbp, rsp
 	
+	mov rdx, rsi
+	mov rsi, rdi
 	mov rdi, rax
+	
 	call sysHandler
 	sti
 
