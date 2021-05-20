@@ -40,14 +40,14 @@ void * initializeKernelBinary()
 {
 	char buffer[10];
 
-	ncPrint("[x64BareBones]");
+	//ncPrint("[x64BareBones]");
 	ncNewline();
 
-	ncPrint("CPU Vendor:");
-	ncPrint(cpuVendor(buffer));
+	//ncPrint("CPU Vendor:");
+	ncPrint(cpuVendor(buffer), 0);
 	ncNewline();
 
-	ncPrint("[Loading modules]");
+	//ncPrint("[Loading modules]");
 	ncNewline();
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
@@ -55,29 +55,29 @@ void * initializeKernelBinary()
 	};
 
 	loadModules(&endOfKernelBinary, moduleAddresses);
-	ncPrint("[Done]");
+	//ncPrint("[Done]");
 	ncNewline();
 	ncNewline();
 
-	ncPrint("[Initializing kernel's binary]");
+	//ncPrint("[Initializing kernel's binary]");
 	ncNewline();
 
 	clearBSS(&bss, &endOfKernel - &bss);
 
-	ncPrint("  text: 0x");
+	//ncPrint("  text: 0x");
 	ncPrintHex((uint64_t)&text);
 	ncNewline();
-	ncPrint("  rodata: 0x");
+	//ncPrint("  rodata: 0x");
 	ncPrintHex((uint64_t)&rodata);
 	ncNewline();
-	ncPrint("  data: 0x");
+	//ncPrint("  data: 0x");
 	ncPrintHex((uint64_t)&data);
 	ncNewline();
-	ncPrint("  bss: 0x");
+	//ncPrint("  bss: 0x");
 	ncPrintHex((uint64_t)&bss);
 	ncNewline();
 
-	ncPrint("[Done]");
+	//ncPrint("[Done]");
 	ncNewline();
 	ncNewline();
 	return getStackBase();
@@ -85,30 +85,30 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	ncPrint("[Kernel Main]");
+	//ncPrint("[Kernel Main]");
 	ncNewline();
-	ncPrint("  Sample code module at 0x");
+	//ncPrint("  Sample code module at 0x");
 	ncPrintHex((uint64_t)sampleCodeModuleAddress);
 	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
+	//ncPrint("  Calling the sample code module returned: ");
 	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
 	ncNewline();
 	ncNewline();
 
-	ncPrint("  Sample data module at 0x");
+	//ncPrint("  Sample data module at 0x");
 	ncPrintHex((uint64_t)sampleDataModuleAddress);
 	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
+	//ncPrint("  Sample data module contents: ");
+	//ncPrint((char*)sampleDataModuleAddress);
 	ncNewline();
 
-	ncPrint("[Finished]");
+	//ncPrint("[Finished]");
 
 	load_idt();
 	while (1)
 	{
 		if(getBufferSize() == 10) {
-			ncPrint(getBuffer());
+			ncPrint(getBuffer(),0);
 			removeBuffer();
 		}
 	}

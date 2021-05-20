@@ -15,10 +15,13 @@ GLOBAL _irq05Handler
 
 GLOBAL _exception0Handler
 
+GLOBAL _int80Handler
+
 GLOBAL _getKey
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN sysHandler
 
 SECTION .text
 
@@ -161,6 +164,16 @@ _getKey:
     pop rbp
     ret
 
+_int80Handler:
+	push rbp
+	mov rbp, rsp
+	
+	mov rdi, rax
+	call sysHandler
+	sti
 
+	mov rsp, rbp
+	pop rbp
+	ret
 SECTION .bss
 	aux resq 1
