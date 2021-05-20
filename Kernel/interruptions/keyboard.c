@@ -1,5 +1,4 @@
 #include <keyboard.h>
-#include <./../include/naiveConsole.h>
 
 #define LEFT_SHIFT 0x2A
 #define RIGHT_SHIFT 0x36
@@ -10,8 +9,11 @@
 #define LEFT_ALT 0x38
 #define CAPSLOCK 0x3A
 #define OFFSET 0x80
-
-char shiftFlag = 0;
+#define BUFFER_SIZE 512
+unsigned char shiftFlag = 0;
+unsigned char ctrlFlag = 0;
+unsigned char buffer[BUFFER_SIZE]={0};
+unsigned int buffIndex = 0;
 //IMPORTANTE, TENEMOS QUE ACLARAR EN EL INFORME EL TIPO DE TECLADO QUE ASUMIMOS
 const char ascii_values[0x56][2] =
 {
@@ -25,49 +27,47 @@ const char ascii_values[0x56][2] =
     {0,0},
     {'\\','|'},
     {'z','Z'},{'x','X'},{'c','C'},{'v','V'},{'b','B'},{'n','N'},{'m','M'},{',','<'},{'.','>'},{'/','?'},{0,0},
-    {0,0},{' ',' '},
+    {0,0},{0,0},{' ',' '},
     {0,0}
 };
 
 void keyboard_handler() 
 {
-    char key = _getKey();
-    char ascii;
+    unsigned char key = _getKey();
     switch (key)
     {
         case LEFT_SHIFT : case RIGHT_SHIFT :
             shiftFlag = 1;
             break;
-        case (char)(LEFT_SHIFT+OFFSET) : case (char)(RIGHT_SHIFT+OFFSET) :
-            shiftFlag=0;
+        case LEFT_SHIFT + OFFSET : case RIGHT_SHIFT + OFFSET :
+            shiftFlag = 0;
             break;
         default:
-            if(key < (char) 0x56) {
-                ascii = getAscii(key);
-                ncPrintChar(ascii);
+            if(key < 0x56) {
+                buffer[buffIndex++] = getAscii(key);
+                buffer[buffIndex] = 0;
             }
             break;
     }
-    
-    /*if(key == SHIFT ) {
-        shiftFlag = 1;
-    }
-    else if(key == (char) (SHIFT+0x80)) {
-        shiftFlag = 0;
-    } 
-    else {
-        char ascii = getAscii(key);
-        ncPrintChar(ascii);
-    }
-    */
     return;
-    
 }
-
 
 char getAscii(unsigned int key) {
     if(shiftFlag)
         return ascii_values[key][1];
     else
         return ascii_values[key][0];
+}
+
+void removeBuffer() {
+    buffer[0] = 0;
+    buffIndex = 0;
+}
+
+char * getBuffer() {
+    return buffer;
+}
+
+unsigned int getBufferSize() {
+    return buffIndex;
 }

@@ -5,6 +5,8 @@
 #include <naiveConsole.h>
 #include <idtLoader.h>
 
+#include <keyboard.h>
+
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -105,7 +107,10 @@ int main()
 	load_idt();
 	while (1)
 	{
-		;
+		if(getBufferSize() == 10) {
+			ncPrint(getBuffer());
+			removeBuffer();
+		}
 	}
 	
 	return 0;
