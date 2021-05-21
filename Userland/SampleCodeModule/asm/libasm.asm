@@ -1,5 +1,5 @@
 GLOBAL _write
-GLOBAL _getKey
+GLOBAL _getBuffer
 section .text
 
 _write:
@@ -14,7 +14,7 @@ _write:
     pop rbp
     ret
 
-_getKey
+_getBuffer:
     push rbp
     mov rbp, rsp
 

@@ -21,7 +21,7 @@ const char ascii_values[0x56][2] =
     {0,0},
     {'1','!'},{'2','@'},{'3','#'},{'4','$'},{'5','$'},{'6','^'},{'7','&'},{'8','*'},{'9','('},{'0',')'},{'-','_'},{'=','+'},{0,0},
     {0,0},{'q','Q'},{'w','W'},{'e','E'},{'r','R'},{'t','T'},{'y','Y'},{'u','U'},{'i','I'},{'o','O'},{'p','P'},{'[','{'},{']','}'},
-    {0,0},
+    {'\n','\n'},
     {0,0},{'a','A'},{'s','S'},{'d','D'},{'f','F'},{'g','G'},{'h','H'},{'j','J'},{'k','K'},{'l','L'},{';',':'},{'\'','\"'},
     {'`','~'},
     {0,0},
@@ -47,7 +47,7 @@ void keyboard_handler()
                 
                 buffer[buffIndex++] = getAscii(key);
                 buffer[buffIndex] = 0;
-                ncPrintChar(getAscii(key), 13);
+                // ncPrintChar(getAscii(key), 13);
             }
             break;
     }
@@ -66,10 +66,15 @@ void removeBuffer() {
     buffIndex = 0;
 }
 
-char * getBuffer() {
+unsigned char * getBuffer() {
     return buffer;
 }
 
 unsigned int getBufferSize() {
     return buffIndex;
 }
+
+// >> ingrese su nombre:
+//  flor
+// >> bienvenida flor
+// >> aasdasjkldas
