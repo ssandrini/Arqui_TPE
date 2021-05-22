@@ -6,7 +6,7 @@
 #include <idtLoader.h>
 
 #include <keyboard.h>
-
+#include <sysHandler.h>
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -116,6 +116,41 @@ int main()
 		}
 	}
 	*/
-	
+
+	// int fecha[3];
+	// int hora[3];
+	// sysHandler((uint64_t) 2, (uint64_t) fecha, (uint64_t) hora);
+	// ncPrintDec(fecha[0]); //dia
+	// ncPrint(" ",0);
+	// ncPrintDec(fecha[1]); //mes
+	// ncPrint(" ",0);
+	// ncPrintDec(fecha[2]); //año
+	// ncNewline();
+	// ncPrintDec(hora[0]); //segundos
+	// ncPrint(" ",0);
+	// ncPrintDec(hora[1]); //minutos
+	// ncPrint(" ",0);
+	// ncPrintDec(hora[2]); //horas
+
+	// uint64_t registros[15];
+
+	// sysHandler((uint64_t) 3, (uint64_t) registros, (uint64_t)  73);
+	// ncPrint("hola mundo", 0);
+	// for(int i = 0 ; i < 15; i++){
+	// 	ncPrintDec(registros[i]);
+	// 	ncPrint(" ", 0);
+	// }
+
 	return 0;
 }
+
+/*
+	>> printmem 4444
+
+	int offset = 9000 - 4444;
+	
+
+	>> 4400 : 40301349AAAAAAAAAAAAAAAAAA
+	>> 4432 : 50000000000000000000000000
+
+*/

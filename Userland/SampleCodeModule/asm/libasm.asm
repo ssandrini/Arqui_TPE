@@ -1,5 +1,6 @@
 GLOBAL _write
 GLOBAL _getBuffer
+GLOBAL _getTime
 section .text
 
 _write:
@@ -25,5 +26,14 @@ _getBuffer:
     pop rbp
     ret
 
+; void _getTime(int * fecha, int * hora);
+_getTime:
+    push rbp
+    mov rbp, rsp
 
+    mov rax, 2   ; llamada a la syscall time
+    int 80h
     
+    mov rsp, rbp
+    pop rbp
+    ret

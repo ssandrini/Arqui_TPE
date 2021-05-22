@@ -12,12 +12,13 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
-
 GLOBAL _exception0Handler
 
-GLOBAL _int80Handler
 
+GLOBAL _int80Handler
 GLOBAL _getKey
+GLOBAL _RTC
+GLOBAL _getRegisters
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
@@ -178,5 +179,40 @@ _int80Handler:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+; en rdi viene el parametro que te permite elegir el dato del RTC
+; 0 = sec
+; 2 = min
+; RTC(2)
+_RTC:
+	push rbp
+	mov rbp, rsp
+				
+	mov rax, rdi
+	out 70h, al
+	in al, 71h
+
+	mov rsp, rbp
+	pop rbp
+	ret
+
+_getRegisters: ; vino la direccion del uint64 * en rdi
+	push rbp
+	mov rbp, rsp
+	pushState
+	mov rcx, 15  ; for(int i = 0 ; i< 15 ; i++)
+	mov rax, 0 	 ; i
+.loop: 
+	pop rdx 
+	mov [rdi+rax*8], rdx
+	inc rax
+	cmp rax, rcx
+	je .end
+	jmp .loop
+.end:
+	mov rsp, rbp
+	pop rbp
+	ret
+
 SECTION .bss
 	aux resq 1

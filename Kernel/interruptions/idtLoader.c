@@ -30,7 +30,7 @@ void load_idt() {
   setup_IDT_entry (0x80, (uint64_t)&_int80Handler);
 
 	// por ahora la mascara solo habilita teclado
-	picMasterMask(0xFD);
+	picMasterMask(0xFD); //
 	picSlaveMask(0xFF);
 
 	_sti();
