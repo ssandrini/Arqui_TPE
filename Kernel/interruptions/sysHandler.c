@@ -16,12 +16,13 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
         case 3: //sysGetReg 
             getReg((uint64_t *) r1 );
             break;
+        case 4: //sysGetMem
+            getMem((uint32_t * ) r1,(uint32_t * ) r2);
         default: 
             //potncial print error
             break;
     }
 }
-
 
 void read(unsigned char * r1, unsigned int r2) {
     unsigned char * KeyBuffer = getBuffer(); 
@@ -41,7 +42,6 @@ void getTime(int * r1, int * r2) {
     r1[1] = _RTC(8); //mes
     r1[2] = _RTC(9); //año
 
-    // PREGUNTAR EN EL FORO SI SE PUEDE
     // ACLARAR QUE ESTO LO SACAMOS DE INTERNET  https://wiki.osdev.org/CMOS#Format_of_Bytes
     r2[0] = (r2[0] & 0x0F) + ((r2[0] / 16) * 10);
     r2[1] = (r2[1] & 0x0F) + ((r2[1] / 16) * 10);
@@ -52,12 +52,12 @@ void getTime(int * r1, int * r2) {
 }
 
 void getReg(uint64_t * r1 ){
-    _getRegisters(r1);
+    _getRegisters(r1); // Despues ver si conviene hacerla en C 
 }
 
-/*
-    mov [r1], rax
-    mov [r1+8], rbx
-    mov [r1+16],
-
-*/
+void getMem(uint32_t * dir, uint32_t * vec) {
+    // falta chequear los rangos accesibles 
+    for(int i = 0; i < 8; i++){
+        vec[i] = *(dir + i*4);
+    }
+}

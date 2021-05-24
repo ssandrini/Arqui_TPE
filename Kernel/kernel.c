@@ -141,16 +141,19 @@ int main()
 	// 	ncPrint(" ", 0);
 	// }
 
+	/*
+	uint32_t * dir = 180000;
+	uint32_t vec[8];
+	
+	sysHandler((uint64_t) 4, (uint64_t) dir,(uint64_t) vec);
+
+	for(int i = 0; i<8;i++) {
+		ncPrintHex((uint64_t) (*(dir+i*4)));
+		ncPrint(" ", 0);
+	}
+
+	*/
+	
 	return 0;
 }
 
-/*
-	>> printmem 4444
-
-	int offset = 9000 - 4444;
-	
-
-	>> 4400 : 40301349AAAAAAAAAAAAAAAAAA
-	>> 4432 : 50000000000000000000000000
-
-*/
