@@ -85,6 +85,7 @@ SECTION .text
 	call exceptionDispatcher
 
 	popState
+	; RSP -> dir de int a = 4/0
 	iretq
 %endmacro
 

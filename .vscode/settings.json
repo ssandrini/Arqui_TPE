@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "syshandler.h": "c"
+        "syshandler.h": "c",
+        "stdarg.h": "c",
+        "lib2.h": "c"
     }
 }

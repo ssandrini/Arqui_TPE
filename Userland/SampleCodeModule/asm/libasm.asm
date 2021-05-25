@@ -6,9 +6,9 @@ section .text
 _write:
     push rbp
     mov rbp, rsp
-                    ; en rdi estaria el caracter a imprimir (ya viene ahi desde la llamada)
+                    ; en rdi estaria el puntero a la string para imprimir
     mov rax, 1     
-    mov rsi, 0Fh   ; color
+    mov rsi, 0Fh    ; color
     int 80h         ; llamada a la syscall write 
 
     mov rsp, rbp

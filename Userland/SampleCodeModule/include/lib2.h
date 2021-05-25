@@ -1,10 +1,10 @@
 #ifndef __LIB2_H__
 #define __LIB2_H__
-extern void _write(char ascii);
-extern void _getBuffer(unsigned char * buffer, int bytes);
+extern void _write(char * string);
+extern void _getBuffer(char * buffer, int bytes);
 int scanf();
-void printf(const char * string);
+void printf(char* format,...); 
 void putChar(const char ascii);
-unsigned char getChar();
-
+char getChar();
+int intToBase(int value, char * buffer, unsigned int base);
 #endif
