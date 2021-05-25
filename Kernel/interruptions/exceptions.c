@@ -3,13 +3,16 @@
 
 static void zero_division();
 
-void exceptionDispatcher(int exception) {
+void exceptionDispatcher(int exception, uint64_t * stackFrame) {
 	if (exception == ZERO_EXCEPTION_ID)
-		zero_division();
+		zero_division(stackFrame);
+	ncPrint("HOLA",0);
+	return;
 }
 
-static void zero_division() {
-	ncPrint("zero division error",0);
+static void zero_division(uint64_t * stackframe) {
+	ncPrint("zero division error ",0);
+	ncNewline();
 }
 
 

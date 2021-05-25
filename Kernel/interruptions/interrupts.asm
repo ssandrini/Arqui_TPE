@@ -23,6 +23,7 @@ GLOBAL _getRegisters
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN sysHandler
+EXTERN getStackBase
 
 SECTION .text
 
@@ -79,14 +80,18 @@ SECTION .text
 
 
 %macro exceptionHandler 1
+	mov rsi, rsp ;Puntero al stack generado por la excepcion
 	pushState
-
 	mov rdi, %1 ; pasaje de parametro
 	call exceptionDispatcher
-
 	popState
-	; RSP -> dir de int a = 4/0
-	iretq
+
+	sti ;Reactivo las interrupciones
+	call getStackBase
+	mov [rsp + 4*8], rax ;restablezco el stack
+	mov rax, 0x400000 ; Direccion del SampleCodeModule
+	mov [rsp], rax
+	iretq ; Reinicio el shell
 %endmacro
 
 

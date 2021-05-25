@@ -1,18 +1,25 @@
 /* sampleCodeModule.c */
  #include <lib2.h>
 
+
+void testZero(){
+	int a=1, b=0;
+	a = a/b;
+	return;
+}
+
 int main() {
 
-	char * m = "mundo";
+	//char * m = "mundo";
 	//printf("a ver si esto anda");
-	printf("hola %s %d", m, 10);
-   /*
-	while(1) {
+	//printf("hola %s %d", m, 10);
+	/*while(1) {
 		unsigned char a = getChar();
-		if(a != 0)
+		if(a !=0){
 			putChar(a); 
+		}
 	}
-	return 0xDEADBEEF;
 	*/
+	testZero();
 	return 0;
 }
