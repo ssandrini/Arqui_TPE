@@ -20,6 +20,11 @@ int main() {
 		}
 	}
 	*/
-	testZero();
+	//testZero();
+
+	printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
+	putChar('x');
+	printf("\n%d",strlen("asd"));
+	
 	return 0;
 }

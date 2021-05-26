@@ -1,11 +1,12 @@
 #include <naiveConsole.h>
+
 #define STD_OUT 0
 #define STD_ERR 1
 #define STD_COLOR 0xD
 #define ERR_COLOR 0x47
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
-static char buffer[64] = { '0' };
+static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+static char buffer[64] = {'0'};
 static uint8_t * const video = (uint8_t*)0xB8000;
 static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
@@ -22,10 +23,23 @@ void ncPrint(const char * string, int fd)
 
 void ncPrintChar(char character, int color)
 {
-	*currentVideo = character;
-	*(currentVideo + 1) = color;
-	currentVideo += 2;
+	if(currentVideo == 0xB8000 + width * 2 * height) {
+		scroll();
+	}
+	if(character == '\n')
+		ncNewline();
+	else {
+		*currentVideo = character;
+		*(currentVideo + 1) = color;
+		currentVideo += 2;
+	}
 }
+void clearLine(uint8_t * p) {
+	for(int i = 0; i < width; i++) {
+		p[i * 2] = ' ';
+	}
+}
+
 
 void ncNewline()
 {
@@ -34,27 +48,6 @@ void ncNewline()
 		ncPrintChar(' ', STD_OUT);
 	}
 	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
-}
-
-void ncPrintDec(uint64_t value)
-{
-	ncPrintBase(value, 10);
-}
-
-void ncPrintHex(uint64_t value)
-{
-	ncPrintBase(value, 16);
-}
-
-void ncPrintBin(uint64_t value)
-{
-	ncPrintBase(value, 2);
-}
-
-void ncPrintBase(uint64_t value, uint32_t base)
-{
-    uintToBase(value, buffer, base);
-    ncPrint(buffer,STD_OUT);
 }
 
 void ncClear()
@@ -66,35 +59,14 @@ void ncClear()
 	currentVideo = video;
 }
 
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
-{
-	char *p = buffer;
-	char *p1, *p2;
-	uint32_t digits = 0;
-
-	//Calculate characters for each digit
-	do
-	{
-		uint32_t remainder = value % base;
-		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
-		digits++;
+void scroll() {
+	currentVideo = video;
+	uint8_t * aux = video + width * 2;
+	while( aux < video + width * 2 * height) {
+		ncPrintChar(*aux, STD_COLOR);
+		aux+=2;
 	}
-	while (value /= base);
-
-	// Terminate string in buffer.
-	*p = 0;
-
-	//Reverse string in buffer.
-	p1 = buffer;
-	p2 = p - 1;
-	while (p1 < p2)
-	{
-		char tmp = *p1;
-		*p1 = *p2;
-		*p2 = tmp;
-		p1++;
-		p2--;
-	}
-
-	return digits;
+	aux -= width * 2;
+	currentVideo = aux;
+	clearLine(currentVideo);
 }
