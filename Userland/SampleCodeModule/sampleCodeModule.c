@@ -1,6 +1,6 @@
 /* sampleCodeModule.c */
- #include <lib2.h>
-
+#include <lib2.h>
+#include <commands.h>
 
 void testZero(){
 	int a=1, b=0;
@@ -24,7 +24,12 @@ int main() {
 
 	printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
 	putChar('x');
-	printf("\n%d",strlen("asd"));
-	
+	printf("\n%d\n",strlen("asd"));
+	help();
+	printf("\n");
+	//getMem();
+	//inforeg();
+	getTime();
 	return 0;
 }
+

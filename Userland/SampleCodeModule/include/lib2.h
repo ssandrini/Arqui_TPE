@@ -1,5 +1,6 @@
 #ifndef __LIB2_H__
 #define __LIB2_H__
+#include <stdint.h>
 extern void _write(char * string);
 extern void _getBuffer(char * buffer, int bytes);
 int scanf();

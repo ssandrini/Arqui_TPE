@@ -5,8 +5,8 @@
 #define STD_COLOR 0xD
 #define ERR_COLOR 0x47
 
-static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
-static char buffer[64] = {'0'};
+// static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+// static char buffer[64] = {'0'};
 static uint8_t * const video = (uint8_t*)0xB8000;
 static uint8_t * currentVideo = (uint8_t*)0xB8000;
 static const uint32_t width = 80;
@@ -23,7 +23,7 @@ void ncPrint(const char * string, int fd)
 
 void ncPrintChar(char character, int color)
 {
-	if(currentVideo == 0xB8000 + width * 2 * height) {
+	if(currentVideo ==  video + width * 2 * height) {
 		scroll();
 	}
 	if(character == '\n')
@@ -34,6 +34,7 @@ void ncPrintChar(char character, int color)
 		currentVideo += 2;
 	}
 }
+
 void clearLine(uint8_t * p) {
 	for(int i = 0; i < width; i++) {
 		p[i * 2] = ' ';

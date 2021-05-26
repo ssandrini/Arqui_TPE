@@ -1,6 +1,8 @@
 GLOBAL _write
 GLOBAL _getBuffer
 GLOBAL _getTime
+GLOBAL _getReg
+GLOBAL _getMem
 section .text
 
 _write:
@@ -32,6 +34,29 @@ _getTime:
     mov rbp, rsp
 
     mov rax, 2   ; llamada a la syscall time
+    int 80h
+    
+    mov rsp, rbp
+    pop rbp
+    ret
+
+; extern void _getReg(uint64_t registers);
+_getReg:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 3   ; llamada a la syscall getRegisters
+    int 80h
+    
+    mov rsp, rbp
+    pop rbp
+    ret
+
+_getMem:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 4   ; llamada a la syscall getMemory
     int 80h
     
     mov rsp, rbp

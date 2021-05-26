@@ -38,7 +38,7 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	char buffer[10];
+	//char buffer[10];
 
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
@@ -83,11 +83,10 @@ int main()
 	// ncPrintDec(hora[2]); //horas
 
 	// uint64_t registros[15];
-
 	// sysHandler((uint64_t) 3, (uint64_t) registros, (uint64_t)  73);
 	// ncPrint("hola mundo", 0);
 	// for(int i = 0 ; i < 15; i++){
-	// 	ncPrintDec(registros[i]);
+	// 	ncPrint(registros[i], 0);
 	// 	ncPrint(" ", 0);
 	// }
 

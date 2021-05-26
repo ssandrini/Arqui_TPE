@@ -14,7 +14,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
             getTime((int* ) r1,(int *) r2); // en r1 dia mes año y en r2 horas min seg
             break;
         case 3: //sysGetReg 
-            getReg((uint64_t *) r1 );
+            getReg((uint64_t *) r1);
             break;
         case 4: //sysGetMem
             getMem((uint32_t * ) r1,(uint32_t * ) r2);
@@ -51,8 +51,8 @@ void getTime(int * r1, int * r2) {
     r1[2] = (r1[2] & 0x0F) + ((r1[2] / 16) * 10);
 }
 
-void getReg(uint64_t * r1 ){
-    _getRegisters(r1); // Despues ver si conviene hacerla en C 
+void getReg(uint64_t * registers){
+    _getRegisters(registers); // Despues ver si conviene hacerla en C 
 }
 
 void getMem(uint32_t * dir, uint32_t * vec) {
