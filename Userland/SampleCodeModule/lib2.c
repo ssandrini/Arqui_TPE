@@ -26,24 +26,23 @@ int strlen(const char * string) {
      return i;
  }
 
+
+ //https://www.techiedelight.com/implement-itoa-function-in-c/
  // Iterative function to implement itoa() function in C
-char *intToStr(int value, char *buffer, int base)
+char *numToStr(int value, char *buffer, int base)
 {
     // invalid input
     if (base < 2 || base > 32)
         return buffer;
-
     // consider absolute value of number
     int n = value;
     if(n < 0) {
         n = -n;
     }
-
     int i = 0;
     while (n)
     {
         int r = n % base;
-
         if (r >= 10)
             buffer[i++] = 65 + (r - 10);
         else
@@ -51,19 +50,15 @@ char *intToStr(int value, char *buffer, int base)
 
         n = n / base;
     }
-
     // if number is 0
     if (i == 0)
         buffer[i++] = '0';
-
     // If base is 10 and value is negative, the resulting string
     // is preceded with a minus sign (-)
     // With any other base, value is always considered unsigned
     if (value < 0 && base == 10)
         buffer[i++] = '-';
-
     buffer[i] = '\0'; // null terminate string
-
     // reverse the string and return it
     return reverse(buffer, 0, i - 1);
 }
@@ -99,9 +94,10 @@ char *strcpy(char *destination, const char *source)
 void printf(char *str, ...)
 {
     va_list args;
-    int i = 0, j = 0;  // i lectura en str  - j pos en buffer
+    int i = 0,h=0, j = 0;  // i lectura en str  - j pos en buffer
     char buff[100] = {0}, tmp[20];
     char *str_arg;
+    char * hexa_arg;
     va_start(args, str);
     while (str && str[i])
     {
@@ -118,7 +114,7 @@ void printf(char *str, ...)
                 }
                 case 'd':
                 {
-                    intToStr(va_arg(args, int),tmp,10);
+                    numToStr(va_arg(args, int),tmp,10); //base 10
                     strcpy(&buff[j], tmp);
                     j += strlen(tmp);
                     break;
@@ -128,6 +124,13 @@ void printf(char *str, ...)
                     str_arg = (char *)va_arg(args, char *);
                     strcpy(&buff[j], str_arg);
                     j += strlen(str_arg);
+                    break;
+                }
+                case 'x':
+                {
+                    numToStr(va_arg(args, int),tmp,16); //base 16
+                    strcpy(&buff[j+h], tmp);
+                    j += strlen(tmp);
                     break;
                 }
             }

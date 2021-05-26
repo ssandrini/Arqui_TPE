@@ -21,10 +21,10 @@ void getTime() {
 
 void inforeg() {
     uint64_t registers[15];
+    static const char *registersName[] = {"RAX", "RBX", "RCX", "RDX", "RBP", "RDI", "RSI", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15"};
     _getReg((uint64_t) registers);
-
-    for(int i = 0; i < 15; i++) {
-         printf("%d \n", registers[i]);
+    for(int i = 0, j=14; i < 15; i++, j--) {
+         printf("%s : %xh \n", registersName[i], registers[j]);
     }
 }
 
