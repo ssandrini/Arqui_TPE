@@ -10,42 +10,44 @@ void help() {
     }
 }
 
-/*
+void getTime() {
+    int date[3]; int hour[3]; 
+    _getTime(date,hour);
+    printf("fecha: ");
+    printf(" %d : %d : %d \n", date[2], date[1], date[0]);
+    printf("hora: ");
+    printf(" %d : %d : %d \n", hour[0], hour[1], hour[2]);
+}
+
 void inforeg() {
     uint64_t registers[15];
     _getReg((uint64_t) registers);
 
     for(int i = 0; i < 15; i++) {
-         printf("%x \n", registers[i]);
+         printf("%d \n", registers[i]);
     }
 }
 
-void getMem(){
-    uint32_t * dir = 180000;
+
+void getMem() {
+    uint32_t * dir = 1800000;
+    /*
+    for(int i = 0; i < 8; i++) {
+        *(dir+i*4) = i;
+    }
+    */
 	uint32_t vec[8];
     _getMem(dir, vec);
+    printf("mem: ");
     for(int i = 0; i<8;i++) {
-        printf("%x ", vec[i]);
+        printf("%d ", vec[i]);
 	}
 }
-*/
-void getTime() {
-    int date[3]; int hour[3];
-    _getTime(date,hour);
-    printf("fecha: \n");
-    for(int i = 0; i < 3; i ++) {
-        printf("%d   ", date[i]);
-    }
-    printf("\n hora: \n");
-    for(int i = 0; i < 3; i ++) {
-        printf("%d   ", date[i]);
-    }
+
+void exc0Trigger() {
+    ;
 }
 
-////     int fecha[3]; int hora[3];
-////     sysHandler((uint64_t) 2, (uint64_t) fecha, (uint64_t) hora);
-
-
-// uint64_t registros[15];
-// sysHandler((uint64_t) 3, (uint64_t) registros, (uint64_t)  73);
-
+void exc6Trigger() {
+    ;
+}

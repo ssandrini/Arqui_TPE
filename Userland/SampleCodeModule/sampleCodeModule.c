@@ -10,6 +10,29 @@ void testZero(){
 
 int main() {
 
+	printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
+	getTime();
+	inforeg();
+	getMem();
+	return 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//char * m = "mundo";
 	//printf("a ver si esto anda");
 	//printf("hola %s %d", m, 10);
@@ -22,14 +45,5 @@ int main() {
 	*/
 	//testZero();
 
-	printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
-	putChar('x');
-	printf("\n%d\n",strlen("asd"));
-	help();
-	printf("\n");
-	//getMem();
-	//inforeg();
-	getTime();
-	return 0;
 }
 

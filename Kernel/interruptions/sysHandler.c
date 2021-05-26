@@ -11,7 +11,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
             ncPrint((const char *) r1, r2); //en r1 iria un string y en r2 el fd 
             break;
         case 2: // sysGetTime
-            getTime((int* ) r1,(int *) r2); // en r1 dia mes año y en r2 horas min seg
+            getTimeRTC(r1, r2); // en r1 dia mes año y en r2 horas min seg
             break;
         case 3: //sysGetReg 
             getReg((uint64_t *) r1);
@@ -34,21 +34,24 @@ void read(unsigned char * r1, unsigned int r2) {
     removeBuffer();  
 }
 
-void getTime(int * r1, int * r2) {
-    r2[0] = _RTC(0); //segundo
-    r2[1] = _RTC(2); //minuto
-    r2[2] = _RTC(4); //hora
-    r1[0] = _RTC(7); //dia
-    r1[1] = _RTC(8); //mes
-    r1[2] = _RTC(9); //año
+// EN R1 VIENE DATE, EN R2 VIENE HOUR
+void getTimeRTC(uint64_t r1, uint64_t r2) {
+    int * buffer1 = (int *) r1;
+    int * buffer2 = (int *) r2;
+    buffer1[0] = _RTC(9); //año
+    buffer1[1] = _RTC(8); //mes
+    buffer1[2] = _RTC(7); //dia
+    buffer2[0] = _RTC(4); //hora
+    buffer2[1] = _RTC(2); //minuto
+    buffer2[2] = _RTC(0); //segundo
 
     // ACLARAR QUE ESTO LO SACAMOS DE INTERNET  https://wiki.osdev.org/CMOS#Format_of_Bytes
-    r2[0] = (r2[0] & 0x0F) + ((r2[0] / 16) * 10);
-    r2[1] = (r2[1] & 0x0F) + ((r2[1] / 16) * 10);
-    r2[2] = ((r2[2] & 0x0F) + (((r2[2] & 0x70) / 16) * 10) ) | (r2[2] & 0x80);
-    r1[0] = (r1[0] & 0x0F) + ((r1[0] / 16) * 10);
-    r1[1] = (r1[1] & 0x0F) + ((r1[1] / 16) * 10);
-    r1[2] = (r1[2] & 0x0F) + ((r1[2] / 16) * 10);
+    buffer2[2] = (buffer2[2] & 0x0F) + ((buffer2[2] / 16) * 10);
+    buffer2[1] = (buffer2[1] & 0x0F) + ((buffer2[1] / 16) * 10);
+    buffer2[0] = ((buffer2[0] & 0x0F) + (((buffer2[0] & 0x70) / 16) * 10) ) | (buffer2[0] & 0x80);
+    buffer1[2] = (buffer1[2] & 0x0F) + ((buffer1[2] / 16) * 10);
+    buffer1[1] = (buffer1[1] & 0x0F) + ((buffer1[1] / 16) * 10);
+    buffer1[0] = (buffer1[0] & 0x0F) + ((buffer1[0] / 16) * 10);
 }
 
 void getReg(uint64_t * registers){
