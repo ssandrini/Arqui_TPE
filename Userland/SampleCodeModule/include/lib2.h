@@ -9,7 +9,8 @@ void putChar(const char ascii);
 char getChar();
 int strlen(const char * string);
 char *strcpy(char *destination, const char *source);
-char *numToStr(int value, char *buffer, int base);
+int numToStr(int value, char *buffer, int base);
 char *reverse(char *buffer, int i, int j);
 void swap(char *x, char *y);
+int strcmp(char * s1, char *s2);
 #endif

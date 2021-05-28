@@ -2,6 +2,7 @@
     "files.associations": {
         "syshandler.h": "c",
         "stdarg.h": "c",
-        "lib2.h": "c"
+        "lib2.h": "c",
+        "commands.h": "c"
     }
 }

@@ -28,6 +28,11 @@ void ncPrintChar(char character, int color)
 	}
 	if(character == '\n')
 		ncNewline();
+	else if(character == -10){
+		*currentVideo = ' ';
+		*(currentVideo + 1) = color;
+		currentVideo -= 2;
+	}
 	else {
 		*currentVideo = character;
 		*(currentVideo + 1) = color;

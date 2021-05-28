@@ -29,11 +29,11 @@ int strlen(const char * string) {
 
  //https://www.techiedelight.com/implement-itoa-function-in-c/
  // Iterative function to implement itoa() function in C
-char *numToStr(int value, char *buffer, int base)
+int numToStr(int value, char *buffer, int base)
 {
     // invalid input
     if (base < 2 || base > 32)
-        return buffer;
+        return -1;
     // consider absolute value of number
     int n = value;
     if(n < 0) {
@@ -60,7 +60,8 @@ char *numToStr(int value, char *buffer, int base)
         buffer[i++] = '-';
     buffer[i] = '\0'; // null terminate string
     // reverse the string and return it
-    return reverse(buffer, 0, i - 1);
+    reverse(buffer, 0, i - 1);
+    return i;
 }
 
 char *reverse(char *buffer, int i, int j)
@@ -94,10 +95,10 @@ char *strcpy(char *destination, const char *source)
 void printf(char *str, ...)
 {
     va_list args;
-    int i = 0,h=0, j = 0;  // i lectura en str  - j pos en buffer
-    char buff[100] = {0}, tmp[20];
+    int i = 0,h, j = 0;  // i lectura en str  - j pos en buffer
+    int forindex;
+    char buff[100] = {0}, tmp[20], tmp2[8];
     char *str_arg;
-    char * hexa_arg;
     va_start(args, str);
     while (str && str[i])
     {
@@ -128,9 +129,13 @@ void printf(char *str, ...)
                 }
                 case 'x':
                 {
-                    numToStr(va_arg(args, int),tmp,16); //base 16
-                    strcpy(&buff[j+h], tmp);
-                    j += strlen(tmp);
+                    h = numToStr(va_arg(args, int),tmp,16); //base 16
+                    for(forindex = 0; forindex < 8-h; forindex++) {
+                        tmp2[forindex] = '0';
+                    }
+                    strcpy(&tmp2[forindex], tmp);
+                    strcpy(&buff[j], tmp2);
+                    j += strlen(tmp2);
                     break;
                 }
             }
@@ -146,382 +151,14 @@ void printf(char *str, ...)
     va_end(args);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-void printf(char * format,...) 
-{ 
-    char * fpointer; 
-    int i; 
-    unsigned int index = 0;
-    char * aux; 
-    char ans[256];
-
-    va_list arg; 
-    va_start(arg, format); 
-
-    for(fpointer = format; *fpointer != '\0'; fpointer++) 
-    { 
-        if(*fpointer != '%') 
-        { 
-            ans[index++] = *fpointer;
-        } 
-        else {
-            fpointer++; // salteamos el porcentaje
-            switch(*fpointer) 
-            { 
-                case 'c' : 
-                    i = va_arg(arg,int);     
-                    ans[index++] = i;
-                    break; 
-
-                case 'd' : 
-                    i = va_arg(arg,int);         
-                    itoa(i,aux,10);
-                    while(*aux != 0) {
-                        ans[index++] = *aux;
-                        aux++;
-                    }
-                    break; 
-
-                case 's': 
-                    aux = va_arg(arg,char *);      
-                    while(*aux != 0) {
-                        ans[index++] = *aux;
-                        aux++;
-                    }
-                    break; 
-
-                case 'x': 
-                    i = va_arg(arg,int);         
-                    itoa(i,aux,16);
-                    while(*aux != 0) {
-                        ans[index++] = *aux;
-                        aux++;
-                    }
-                    break; 
-                fpointer++;
-            }  
-        } 
-    } 
-
-    ans[index] = 0;
-    va_end(arg); 
-    _write(ans);
-    return;
-} 
-
-void swap(char *x, char *y) {
-    char t = *x; *x = *y; *y = t;
-}
- 
-// Function to reverse `buffer[i…j]`
-char* reverse(char *buffer, int i, int j)
-{
-    while (i < j) {
-        swap(&buffer[i++], &buffer[j--]);
-    }
- 
-    return buffer;
-}
- 
-// Iterative function to implement `itoa()` function in C
-char* itoa(int value, char* buffer, int base)
-{
-    // invalid input
-    if (base < 2 || base > 32) {
-        return buffer;
-    }
- 
-    // consider the absolute value of the number
-    int n = value;;
-    if(n < 0)
-        n = -n;
- 
+int strcmp(char *s1, char *s2){
     int i = 0;
-    while (n)
-    {
-        int r = n % base;
- 
-        if (r >= 10) {
-            buffer[i++] = 65 + (r - 10);
-        }
-        else {
-            buffer[i++] = 48 + r;
-        }
- 
-        n = n / base;
+      while(s1[i] == s2[i])
+      {
+          if(s1[i] == '\0' && s2[i] == '\0')
+              return 0; //si llego hasta aca es porque son exactamente iguales
+        i++;
     }
- 
-    // if the number is 0
-    if (i == 0) {
-        buffer[i++] = '0';
-    }
- 
-    // If the base is 10 and the value is negative, the resulting string
-    // is preceded with a minus sign (-)
-    // With any other base, value is always considered unsigned
-    if (value < 0 && base == 10) {
-        buffer[i++] = '-';
-    }
- 
-    buffer[i] = '\0'; // null terminate string
- 
-    // reverse the string and return it
-    return reverse(buffer, 0, i - 1);
+    return s1[i] - s2[i]; //si llego aca es que son distintos
 }
 
-*/

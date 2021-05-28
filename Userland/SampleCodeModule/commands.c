@@ -1,8 +1,10 @@
 #include <commands.h>
 
+#define COMMANDS_SIZE 8
+char commandsNames[8][20] = {"help", "time", "inforeg", "printmem DIR", "cpuid", "trigger0", "trigger6", "quadratic"};
 char info[3][150] = {"inforeg: imprime en pantalla el valor de todos los registros \n",
 "printmem DIR : realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
-"time: desplega el dia y la hora del sistema"};
+"time: desplega el dia y la hora del sistema\n"};
 
 void help() {
     for(int i = 0; i < 3; i++){
@@ -30,17 +32,16 @@ void inforeg() {
 
 
 void getMem() {
-    uint32_t * dir = 1800000;
-    /*
+    uint32_t * dir = (uint32_t * )1800000;
+    
     for(int i = 0; i < 8; i++) {
         *(dir+i*4) = i;
     }
-    */
 	uint32_t vec[8];
     _getMem(dir, vec);
-    printf("mem: ");
+    printf("mem: \n");
     for(int i = 0; i<8;i++) {
-        printf("%d ", vec[i]);
+        printf("%xh \n", vec[i]);
 	}
 }
 
@@ -50,4 +51,12 @@ void exc0Trigger() {
 
 void exc6Trigger() {
     ;
+}
+
+int checkCommand(char * buffer) {
+    for(int i = 0; i < COMMANDS_SIZE; i++) {
+        if( strcmp(buffer, commandsNames[i]) == 0 )
+            return i;
+    }
+    return -1;
 }
