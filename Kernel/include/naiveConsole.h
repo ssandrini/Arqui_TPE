@@ -8,5 +8,6 @@ void ncPrintChar(char character, int color);
 void ncNewline();
 void ncClear();
 void scroll();
+void drawLine();
 void clearLine(uint8_t * p);
 #endif

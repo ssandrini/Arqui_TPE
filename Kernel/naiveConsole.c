@@ -8,11 +8,12 @@
 #define HEIGHT 25 
 
 /*
-p------------------------------
-------------------------------x //WIDTH * HEIGHT - 2
-x.............................. height/2
-v------------------------------
--------------------------------
+v1 _ _ _ _ _
+ _ _ _ _ _ _
+------------
+v2 _ _ _ _ _
+ _ _ _ _ _ _
+
 */
 
 // static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
@@ -28,6 +29,13 @@ void changeScreen(int screen) {
 	currentScreen = screen;
 }
 
+void drawLine() {
+	uint8_t * l = video2 - WIDTH * 2;
+	for(int i = 0; i < WIDTH; i++) {
+		l[i * 2] = '-';
+	}
+}
+
 void ncPrint(const char * string, int fd)
 {
 	int color = STD_COLOR;
@@ -40,26 +48,23 @@ void ncPrint(const char * string, int fd)
 void ncPrintChar(char character, int color)
 {
 	if(currentScreen == 0) {
-		if(currentVideo1 ==  video1 + WIDTH * HEIGHT ) {
-		    scroll();
-		}
 		if(character == '\n')
 			ncNewline();
-		else if(character == -10){
+		else if(character == -10){ // BACKSPACE (BORRAR)
 			currentVideo1 -= 2;
 			*currentVideo1 = ' ';
 			*(currentVideo1 + 1) = color;
 		}
-		else {
+		else { // CUALQUIER CARACTER
 			*currentVideo1 = character;
 			*(currentVideo1 + 1) = color;
 			currentVideo1 += 2;
 		}
-	}
-	else{
-		if(currentVideo2 ==  video2 + WIDTH *2* (HEIGHT/2 + 1)) {
+		if(currentVideo1 ==  video2 - WIDTH * 2) {
 		    scroll();
 		}
+	}
+	else{
 		if(character == '\n')
 			ncNewline();
 		else if(character == -10){
@@ -71,6 +76,9 @@ void ncPrintChar(char character, int color)
 			*currentVideo2 = character;
 			*(currentVideo2 + 1) = color;
 			currentVideo2 += 2;
+		}
+		if(currentVideo2 ==  video2 + WIDTH * (HEIGHT - 1)) {
+		    scroll();
 		}
 	}
 	
@@ -111,10 +119,10 @@ void ncClear()
 
 void scroll() {
 	
-	if(currentScreen == 0){
-		currentVideo1 = video1; //// primer linea
-		uint8_t * aux = video1 + WIDTH * 2;
-		while( aux < video1 + WIDTH * HEIGHT ) {
+	if(currentScreen == 0) {
+		currentVideo1 = video1; //// lo llevo al principio
+		uint8_t * aux = video1 + WIDTH * 2; // el aux apunta al principio de la sig linea
+		while( aux < video2 - WIDTH * 2 ) { // copio en la linea de arriba 
 			ncPrintChar(*aux, STD_COLOR);
 			aux+=2;
 		}
@@ -128,7 +136,7 @@ void scroll() {
 	else{
 		currentVideo2 = video2;
 		uint8_t * aux = video2 + WIDTH * 2;
-		while( aux < video2 + WIDTH * HEIGHT) {
+		while( aux < video2 + WIDTH * (HEIGHT-1)) {
 			ncPrintChar(*aux, STD_COLOR);
 			aux+=2;
 		}

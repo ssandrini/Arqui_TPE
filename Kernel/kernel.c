@@ -55,6 +55,7 @@ int main()
 {	
 	load_idt();
 	ncClear();
+	drawLine();
 	((EntryPoint)sampleCodeModuleAddress)();
 
 	/*
