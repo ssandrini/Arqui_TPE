@@ -1,10 +1,11 @@
 #include <shell.h> 
 #define MAX_SIZE 512
 #define ESC 1
+#define TAB -12
 int exit = 0;
-char inputBuffer[MAX_SIZE];
-int bIndex = 0;
-
+char buffer[2][MAX_SIZE];
+int bIndex[2];
+int cB = 0; 
 void shell() {
 
     while(!exit) {
@@ -12,12 +13,21 @@ void shell() {
         if( c == ESC ) {
             exit = 1;
         }
+        else if( c == TAB ){
+            if(cB == 0){
+                cB++;
+            }
+            else{
+                cB--;
+            }
+            _changeScreen(cB);
+        }
         else if( c == '\n') {
             putChar(c);
-            int isCommand = checkCommand(inputBuffer);
-            inputBuffer[0] = 0;
-            bIndex = 0;
-            if(isCommand >= 0){
+            int isCommand = checkCommand(buffer[cB]);//el uno por default
+            buffer[cB][0] = 0;
+            bIndex[cB] = 0;
+            if(isCommand >= 0) {
                 switch(isCommand) {
                     case 0: help(); break;
                     case 1: getTime(); break;
@@ -30,20 +40,21 @@ void shell() {
                 printf("El comando ingresado es invalido\n");
             }
         }
-        else if (c != 0 ) { 
-            putChar(c);
+        else if (c != 0 ) {
             if(c == -10) {
-                inputBuffer[--bIndex] = 0;
+                if(bIndex[cB]>0){
+                    putChar(c);
+                    buffer[cB][--bIndex[cB]] = 0;
+                }
             }
-            inputBuffer[bIndex++] = c;
-            inputBuffer[bIndex] = 0;
+            else {
+               putChar(c);
+               buffer[cB][bIndex[cB]++] = c;
+               buffer[cB][bIndex[cB]] = 0;
+            }
         }        
     }
-
-    // hol
-    //    3
     printf("chau\n");
     return;
 }
 
-// tenemos un error al querer borrar en la shell, no se borra el caracter

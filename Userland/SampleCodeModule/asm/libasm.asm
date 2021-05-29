@@ -3,6 +3,7 @@ GLOBAL _getBuffer
 GLOBAL _getTime
 GLOBAL _getReg
 GLOBAL _getMem
+GLOBAL _changeScreen
 section .text
 
 _write:
@@ -57,6 +58,18 @@ _getMem:
     mov rbp, rsp
 
     mov rax, 4   ; llamada a la syscall getMemory
+    int 80h
+    
+    mov rsp, rbp
+    pop rbp
+    ret
+
+; en rdi se indica el numero de pantalla
+_changeScreen:
+    push rbp
+    mov rbp, rsp
+
+    mov rax, 5   ; llamada a la syscall changeScreen
     int 80h
     
     mov rsp, rbp

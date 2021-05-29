@@ -3,6 +3,6 @@
 
 #include <commands.h>
 #include <lib2.h>
-
+void _changeScreen(int cB);
 void shell();
 #endif

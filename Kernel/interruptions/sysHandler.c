@@ -18,6 +18,8 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
             break;
         case 4: //sysGetMem
             getMem((uint32_t * ) r1,(uint32_t * ) r2);
+        case 5:
+            changeScreen((int) r1);
         default: 
             //potncial print error
             break;

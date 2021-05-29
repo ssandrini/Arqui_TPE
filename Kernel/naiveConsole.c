@@ -4,13 +4,29 @@
 #define STD_ERR 1
 #define STD_COLOR 0xD
 #define ERR_COLOR 0x47
+#define WIDTH 80
+#define HEIGHT 25 
+
+/*
+p------------------------------
+------------------------------x //WIDTH * HEIGHT - 2
+x.............................. height/2
+v------------------------------
+-------------------------------
+*/
 
 // static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 // static char buffer[64] = {'0'};
-static uint8_t * const video = (uint8_t*)0xB8000;
-static uint8_t * currentVideo = (uint8_t*)0xB8000;
-static const uint32_t width = 80;
-static const uint32_t height = 25 ;
+uint8_t * video1 = (uint8_t*)0xB8000;
+uint8_t * video2 = (uint8_t*) (0xB8000 + WIDTH * 2 * (HEIGHT/2 +1));
+uint8_t * currentVideo1 = (uint8_t*)0xB8000;
+uint8_t * currentVideo2 = (uint8_t*) (0xB8000 + WIDTH *2* (HEIGHT/2 + 1));
+
+int currentScreen = 0;
+
+void changeScreen(int screen) {
+	currentScreen = screen;
+}
 
 void ncPrint(const char * string, int fd)
 {
@@ -23,25 +39,45 @@ void ncPrint(const char * string, int fd)
 
 void ncPrintChar(char character, int color)
 {
-	if(currentVideo ==  video + width * 2 * height) {
-		scroll();
+	if(currentScreen == 0) {
+		if(currentVideo1 ==  video1 + WIDTH * HEIGHT ) {
+		    scroll();
+		}
+		if(character == '\n')
+			ncNewline();
+		else if(character == -10){
+			currentVideo1 -= 2;
+			*currentVideo1 = ' ';
+			*(currentVideo1 + 1) = color;
+		}
+		else {
+			*currentVideo1 = character;
+			*(currentVideo1 + 1) = color;
+			currentVideo1 += 2;
+		}
 	}
-	if(character == '\n')
-		ncNewline();
-	else if(character == -10){
-		*currentVideo = ' ';
-		*(currentVideo + 1) = color;
-		currentVideo -= 2;
+	else{
+		if(currentVideo2 ==  video2 + WIDTH *2* (HEIGHT/2 + 1)) {
+		    scroll();
+		}
+		if(character == '\n')
+			ncNewline();
+		else if(character == -10){
+			currentVideo2 -= 2;
+			*currentVideo2 = ' ';
+			*(currentVideo2 + 1) = color;
+		}
+		else {
+			*currentVideo2 = character;
+			*(currentVideo2 + 1) = color;
+			currentVideo2 += 2;
+		}
 	}
-	else {
-		*currentVideo = character;
-		*(currentVideo + 1) = color;
-		currentVideo += 2;
-	}
+	
 }
 
 void clearLine(uint8_t * p) {
-	for(int i = 0; i < width; i++) {
+	for(int i = 0; i < WIDTH; i++) {
 		p[i * 2] = ' ';
 	}
 }
@@ -49,30 +85,55 @@ void clearLine(uint8_t * p) {
 
 void ncNewline()
 {
-	do
-	{
-		ncPrintChar(' ', STD_OUT);
+	if(currentScreen == 0) {
+		do
+		{
+			ncPrintChar(' ', STD_OUT);
+		}
+		while((uint64_t)(currentVideo1 - video1) % (WIDTH*2) != 0);
 	}
-	while((uint64_t)(currentVideo - video) % (width * 2) != 0);
+	else {
+		do
+		{
+			ncPrintChar(' ', STD_OUT);
+		}
+		while((uint64_t)(currentVideo2 - video2) % (WIDTH*2) != 0);
+	}
 }
 
 void ncClear()
 {
-	int i;
-
-	for (i = 0; i < height * width; i++)
-		video[i * 2] = ' ';
-	currentVideo = video;
+	for (int i = 0; i < HEIGHT* WIDTH; i++)
+		video1[i * 2] = ' ';
+	currentVideo1 = video1;
+	currentVideo2 = video2;
 }
 
 void scroll() {
-	currentVideo = video;
-	uint8_t * aux = video + width * 2;
-	while( aux < video + width * 2 * height) {
-		ncPrintChar(*aux, STD_COLOR);
-		aux+=2;
+	
+	if(currentScreen == 0){
+		currentVideo1 = video1; //// primer linea
+		uint8_t * aux = video1 + WIDTH * 2;
+		while( aux < video1 + WIDTH * HEIGHT ) {
+			ncPrintChar(*aux, STD_COLOR);
+			aux+=2;
+		}
+		aux -= WIDTH * 2;
+		currentVideo1 = aux;
+		clearLine(currentVideo1);
 	}
-	aux -= width * 2;
-	currentVideo = aux;
-	clearLine(currentVideo);
+
+
+
+	else{
+		currentVideo2 = video2;
+		uint8_t * aux = video2 + WIDTH * 2;
+		while( aux < video2 + WIDTH * HEIGHT) {
+			ncPrintChar(*aux, STD_COLOR);
+			aux+=2;
+		}
+		aux -= WIDTH * 2;
+		currentVideo2 = aux;
+		clearLine(currentVideo2);
+	}
 }

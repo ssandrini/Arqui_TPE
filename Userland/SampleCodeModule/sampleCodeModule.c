@@ -8,7 +8,7 @@ void testZero(){
 }
 
 int main() {
-	printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
+	//printf("a ver si esto %s %d %x puntos \n","anda",10, 0xAFD56);
 	shell();
 	return 0;
 
