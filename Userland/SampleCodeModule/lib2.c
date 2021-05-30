@@ -162,3 +162,42 @@ int strcmp(char *s1, char *s2){
     return s1[i] - s2[i]; //si llego aca es que son distintos
 }
 
+ //https://www.geeksforgeeks.org/write-your-own-atoi/
+ int strToInt(char *str, int* size){
+    *size=0;
+     int res = 0;
+     int i = 0;
+
+     for (; str[i] != '\0'; i++)
+     {
+         if (str[i] < '0' || str[i] > '9')
+             return res;
+         res = res * 10 + str[i] - '0';
+         *size += 1;
+     }
+
+     return res;
+}
+
+ uint32_t * hexaStrToDir(char * hexaStr) { // los caracteres ya tienen que ser validos
+     int len = strlen(hexaStr);
+     uint32_t * ans = 0;
+     int j=0;
+     for(int i = len-1; i >= 0; i--, j++) {
+         if(hexaStr[i] <= '9' && hexaStr[i] >= '0') {
+             ans += (hexaStr[i] - '0') * pow(16,j); 
+         }
+         else if(hexaStr[i] <= 'F' && hexaStr[i] >= 'A'){
+             ans += (hexaStr[i] - 'A') * pow(16, j);
+         }
+     }
+     return ans;
+ }
+
+ int pow(int base, int e) { 
+     int ans = 1;
+     for(int i = 0; i < e; i++) {
+        ans*=base;
+     }
+     return ans;
+ }
