@@ -61,18 +61,19 @@ int checkCommand(char * buffer) {
     return -1;
 }
 
-int quadratic() {
-    // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
-    // los puse fijos para probar
-    long double r1, r2, a, b, c;
-    a = (long double) 1;
-    b = (long double) -2;
-    c = (long double) -10;    
-    int aux = _quadratic(&a,&b,&c, &r1,&r2);
-    if(aux == 0) {
-        printf("No se pudo encontrar las raices\n");
-    } else {
-        printf("las encontre, todavia no tenemos hecho el soporte para %Lf");
-        // printf("r1: %Lf %Lf \n",r1,r2);
-    }
-}
+// int quadratic() {
+//     // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
+//     // los puse fijos para probar
+//     long double r1, r2, a, b, c;
+//     a = (long double) 1;
+//     b = (long double) -2;
+//     c = (long double) -10;    
+//     int aux = _quadratic(&a,&b,&c, &r1,&r2);
+//     if(aux == 0) {
+//         printf("No se pudo encontrar las raices\n");
+//     } else {
+//         printf("las encontre, todavia no tenemos hecho el soporte para %Lf");
+//         // printf("r1: %Lf %Lf \n",r1,r2);
+//     }
+//     //return aux;?
+// }
