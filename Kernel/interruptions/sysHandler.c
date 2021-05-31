@@ -4,7 +4,7 @@
 void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
     switch (sysNumber)
     { 
-        case 0: //sysRead  r1=buffer r2=10
+        case 0: // sysRead  r1=buffer r2=10
             read((unsigned char *)r1, (unsigned int)r2);
             break;
         case 1: // sysWrite 
@@ -13,14 +13,18 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
         case 2: // sysGetTime
             getTimeRTC(r1, r2); // en r1 dia mes año y en r2 horas min seg
             break;
-        case 3: //sysGetReg 
+        case 3: // sysGetReg 
             getReg((uint64_t *) r1);
             break;
-        case 4: //sysGetMem
+        case 4: // sysGetMem
             getMem((uint32_t * ) r1,(uint32_t * ) r2);
             break;
-        case 5:
+        case 5: // sysChangeScreen
             changeScreen((int) r1);
+            break;
+        case 6: // sysClearScreen
+            clearScreen(); 
+            break;
         default: 
             //potncial print error
             break;
@@ -66,4 +70,8 @@ void getMem(uint32_t * dir, uint32_t * vec) {
     for(int i = 0; i < 8; i++){
         vec[i] = *(dir + i*4);
     }
+}
+
+void clearScreen() {
+    ncClear();
 }

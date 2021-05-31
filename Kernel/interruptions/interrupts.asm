@@ -206,7 +206,7 @@ _getRegisters: ; vino la direccion del uint64 * en rdi
 	push rbp
 	mov rbp, rsp
 	pushState
-	mov rcx, 15  ; for(int i = 0 ; i< 15 ; i++)
+	mov rcx, 15  ; for(int i = 0 ; i< 18 ; i++)
 	mov rax, 0 	 ; i
 .loop: 
 	pop rdx 

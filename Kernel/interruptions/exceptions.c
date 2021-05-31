@@ -5,10 +5,12 @@
 static void zero_division();
 
 void exceptionDispatcher(int exception, uint64_t * stackFrame) {
+	/*
 	if (exception == ZERO_EXCEPTION_ID)
 		zero_division(stackFrame);
 	if(exception == INVALID_OPERATION_ID)
 		invalid_operation(stackFrame);
+		*/
 	//habria que imprimit los registros
 	//hay que resetear la pantalla
 	return;
@@ -27,6 +29,7 @@ void exceptionDispatcher(int exception, uint64_t * stackFrame) {
 	//}
 }
 
+/*
 static void invalid_operation(uint64_t * stackFrame){
 	ncPrint("Invalid code of operation", 0);
 	ncNewline();
@@ -36,6 +39,7 @@ static void zero_division(uint64_t * stackframe) {
 	ncPrint("Zero division error ",0);
 	ncNewline();
 }
+*/
 
 
 /*
