@@ -7,11 +7,14 @@ char buffer[2][MAX_SIZE];
 char parameter[2][MAX_SIZE];
 int bIndex[2];
 int cB = 0; 
-
+char c = 0;
 int Tflag = 0;
 void shell() {
     while(!exit) {
-        char c = getChar();
+        do {
+            c = getChar();
+        } while(c == 0);
+
         if( c == ESC ) {
             exit = 1;
         }
@@ -35,9 +38,9 @@ void shell() {
                     case 1: getTime(); break;
                     case 2: inforeg(); break;
                     case 3: getMem(parameter[cB]); break;
-                    case 5: 
-                        printf("entre");
-                        break;
+                    case 5: exc0Trigger();break;
+                    case 6: exc6Trigger();break;
+                    case 8: clear(cB);break;
                     default: break;
                 }
                 parameter[cB][0] = 0;

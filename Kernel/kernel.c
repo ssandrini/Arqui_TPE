@@ -56,7 +56,8 @@ int main()
 {	
 	load_idt();
 	setAddresses((uint64_t *)sampleCodeModuleAddress, _getRSP());
-	ncClear();
+	ncClear(0);
+	ncClear(1);
 	//int a = 1/0;
 	drawLine();
 	((EntryPoint)sampleCodeModuleAddress)();

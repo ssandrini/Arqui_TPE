@@ -17,6 +17,7 @@ GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 GLOBAL _int80Handler
 GLOBAL _getKey
+GLOBAL _keyPressed
 GLOBAL _RTC
 GLOBAL _getRegisters
 
@@ -153,37 +154,40 @@ haltcpu:
 	hlt
 	ret
 
+;_getKey:
+ ;   push rbp
+  ;  mov rbp, rsp
+
+   ; mov rax, 0
+    ;mov al, 1
+    ;out 64h, al
+    ;in al, 60h
+
+    ;mov rsp, rbp
+    ;pop rbp
+    ;ret
+_keyPressed:
+	in al,64h
+	and al,0x01 
+	ret
+
 _getKey:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 0
-    mov al, 1
-    out 64h, al
-    in al, 60h
-
-    mov rsp, rbp
-    pop rbp
-    ret
+	in al,60h
+	ret
 
 _int80Handler:
-	push rbp
-	mov rbp, rsp
+	pushState
 	
+	mov rcx, rsp
 	mov rdx, rsi
 	mov rsi, rdi
 	mov rdi, rax
-	
 	call sysHandler
 	
-	mov al, 20h
-	out 20h, al
-
+	popState
+	;mov al, 20h
+	;out 20h, al
 	sti
-
-
-	mov rsp, rbp
-	pop rbp
 	iretq
 
 ; en rdi viene el parametro que te permite elegir el dato del RTC

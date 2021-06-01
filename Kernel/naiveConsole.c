@@ -107,12 +107,18 @@ void ncNewline()
 	}
 }
 
-void ncClear()
-{
-	for (int i = 0; i < HEIGHT* WIDTH; i++)
-		video1[i * 2] = ' ';
-	currentVideo1 = video1;
-	currentVideo2 = video2;
+void ncClear(int currentScreen)
+{	
+	if(currentScreen == 0) {
+		for (int i = 0; i < HEIGHT* (WIDTH/2 - 2); i++)
+			video1[i * 2] = ' ';
+		currentVideo1 = video1;
+	}
+	else {
+		for (int i = 0; i < HEIGHT* (WIDTH/2 - 2); i++)
+			video2[i * 2] = ' ';
+		currentVideo2 = video2;
+	}
 }
 
 void scroll() {

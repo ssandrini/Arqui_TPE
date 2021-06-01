@@ -4,7 +4,9 @@ GLOBAL _getTime
 GLOBAL _getReg
 GLOBAL _getMem
 GLOBAL _changeScreen
+GLOBAL _clearScreen
 GLOBAL _quadratic
+GLOBAL _exc6Trigger
 section .text
 
 _write:
@@ -77,6 +79,17 @@ _changeScreen:
     pop rbp
     ret
 
+_clearScreen:
+    push rbp
+    mov rbp, rsp
+                    ; en rdi viene el cB
+    mov rax, 6   ; llamada a la syscall clearScreen
+    int 80h
+    
+    mov rsp, rbp
+    pop rbp
+    ret
+
 _quadratic:
     push rbp              ; armado del stackframe
     mov rbp, rsp
@@ -123,3 +136,8 @@ _quadratic:
     mov rsp, rbp
     pop rbp
     ret
+
+; agregar el link de donde lo sacamos (foro horacio)
+_exc6Trigger:
+	UD2
+	ret

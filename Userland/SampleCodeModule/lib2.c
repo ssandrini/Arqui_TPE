@@ -13,9 +13,9 @@ void putChar(const char ascii){
 }
 
 char getChar() {
-    char * ans=0;
-    _getBuffer(ans,1);
-    return ans[0];
+    char k;
+    _getBuffer(&k,1);
+    return k;
 }
 
 int strlen(const char * string) {

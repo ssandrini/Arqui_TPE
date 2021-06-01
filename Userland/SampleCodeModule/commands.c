@@ -1,10 +1,10 @@
 #include <commands.h>
 
-#define COMMANDS_SIZE 8
+#define COMMANDS_SIZE 9
 #define CASE_GETMEM 3
 #define LENGTH_PRINTMEM 8
 
-char commandsNames[8][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic"};
+char commandsNames[9][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic","clear"};
 char info[3][150] = {"inforeg: imprime en pantalla el valor de todos los registros \n",
 "printmem DIR : realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
 "time: desplega el dia y la hora del sistema\n"};
@@ -13,6 +13,10 @@ void help() {
     for(int i = 0; i < 3; i++){
         printf("%s",info[i]);
     }
+}
+
+void clear(int cB) {
+    _clearScreen(cB);
 }
 
 void getTime() {
@@ -25,14 +29,13 @@ void getTime() {
 }
 
 void inforeg() {
-    uint64_t registers[15];
-    static const char *registersName[] = {"RAX", "RBX", "RCX", "RDX", "RBP", "RDI", "RSI", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"};
-    //NOS FALTAN "RIP" "CS" "FLAGS" "RSP"
+    uint64_t registers[19];
+    static const char *registersName[] = { "R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
     _getReg((uint64_t) registers);
-    for(int i = 0, j=14; i < 15; i++, j--) {
+    for(int i = 0; i < 19; i++) {
          if( i > 0 && i % 3 == 0)
             printf("\n");
-         printf("%s : %xh    ", registersName[i], registers[j]);
+         printf("%s : %xh    ", registersName[i], registers[i]);
     }
     printf("\n");
 }
@@ -59,7 +62,7 @@ void exc0Trigger() {
 }
 
 void exc6Trigger() {
-    ;
+    _exc6Trigger();
 }
 
 int checkCommand(char * buffer, char * parameter) {

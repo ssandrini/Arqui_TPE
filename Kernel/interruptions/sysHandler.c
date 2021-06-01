@@ -1,7 +1,7 @@
 #include <sysHandler.h>
 #include <naiveConsole.h>
 
-void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
+void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t rsp){
     switch (sysNumber)
     { 
         case 0: // sysRead  r1=buffer r2=10
@@ -14,7 +14,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
             getTimeRTC(r1, r2); // en r1 dia mes año y en r2 horas min seg
             break;
         case 3: // sysGetReg 
-            getReg((uint64_t *) r1);
+            getReg((uint64_t *) r1, (uint64_t *) rsp);
             break;
         case 4: // sysGetMem
             getMem((uint32_t * ) r1,(uint32_t * ) r2);
@@ -23,7 +23,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2){
             changeScreen((int) r1);
             break;
         case 6: // sysClearScreen
-            clearScreen(); 
+            clearScreen((int)r1); 
             break;
         default: 
             //potncial print error
@@ -61,8 +61,11 @@ void getTimeRTC(uint64_t r1, uint64_t r2) {
     buffer1[0] = (buffer1[0] & 0x0F) + ((buffer1[0] / 16) * 10);
 }
 
-void getReg(uint64_t * registers){
-    _getRegisters(registers); // Despues ver si conviene hacerla en C 
+void getReg(uint64_t * registers, uint64_t * stackFrame){
+    //_getRegisters(registers); // Despues ver si conviene hacerla en C 
+    for(int i = 0; i < 19; i++) {
+        registers[i] = stackFrame[i];
+    }
 }
 
 void getMem(uint32_t * dir, uint32_t * vec) {
@@ -72,6 +75,6 @@ void getMem(uint32_t * dir, uint32_t * vec) {
     }
 }
 
-void clearScreen() {
-    ncClear();
+void clearScreen(int currentScreen) {
+    ncClear(currentScreen);
 }

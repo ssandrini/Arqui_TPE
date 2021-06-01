@@ -6,10 +6,10 @@
 
 extern int _RTC(int num);
 extern void _getRegisters(uint64_t * regs);
-void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2);
+void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t rsp);
 void read(unsigned char * r1, unsigned int r2);
 void getTimeRTC(uint64_t r1, uint64_t r2);
-void getReg(uint64_t * r1);
+void getReg(uint64_t * r1, uint64_t * stackFrame);
 void getMem(uint32_t * dir, uint32_t * vec);
-void clearScreen();
+void clearScreen(int currentScreen);
 #endif

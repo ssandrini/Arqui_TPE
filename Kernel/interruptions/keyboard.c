@@ -9,7 +9,7 @@
 #define LEFT_ALT 0x38
 #define CAPSLOCK 0x3A
 #define OFFSET 0x80
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 50
 unsigned char shiftFlag = 0;
 unsigned char ctrlFlag = 0;
 unsigned char buffer[BUFFER_SIZE]={0};
@@ -31,25 +31,31 @@ const char ascii_values[0x56][2] =
     {0,0}
 };
 
+char keyPressed(){
+	return _keyPressed();
+}
+
 void keyboard_handler() 
 {
-    unsigned char key = _getKey();
-    switch (key)
-    {
-        case LEFT_SHIFT : case RIGHT_SHIFT :
-            shiftFlag = 1;
-            break;
-        case LEFT_SHIFT + OFFSET : case RIGHT_SHIFT + OFFSET :
-            shiftFlag = 0;
-            break;
-        default:
-            if(key < 0x56) {
-                
-                buffer[buffIndex++] = getAscii(key);
-                buffer[buffIndex] = 0;
-                // ncPrintChar(getAscii(key), 13);
-            }
-            break;
+    if(keyPressed()){ 
+        unsigned char key = _getKey();
+        switch (key)
+        {
+            case LEFT_SHIFT : case RIGHT_SHIFT :
+                shiftFlag = 1;
+                break;
+            case LEFT_SHIFT + OFFSET : case RIGHT_SHIFT + OFFSET :
+                shiftFlag = 0;
+                break;
+            default:
+                if(key < 0x56) {
+                    
+                    buffer[buffIndex++] = getAscii(key);
+                    buffer[buffIndex] = 0;
+                    // ncPrintChar(getAscii(key), 13);
+                }
+                break;
+        }
     }
     return;
 }

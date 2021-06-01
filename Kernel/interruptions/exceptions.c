@@ -9,17 +9,18 @@
 uint64_t * ipReturn;
 uint64_t * rspReturn;
 
-// void exceptionDispatcher(int exception, uint64_t * stackFrame) {
 void exceptionDispatcher(uint64_t exception, uint64_t * stackFrame) {
 	// por ahora manejamos estas dos excepciones	
 	if (exception == (uint64_t) 0 ) {
-		//zero_division(stackFrame);
 		zero_division();
 	}
 	else if(exception == INVALID_OPERATION_ID)
 		invalid_operation();
 	// en todas se imprimen los registros y se resetea
 	registerPrint(stackFrame);
+	// para resetear cambiamos aca los valoress de los registros
+	stackFrame[0xF] = (uint64_t)ipReturn;
+	stackFrame[0x12] = (uint64_t)rspReturn;
 	return;
 }
 

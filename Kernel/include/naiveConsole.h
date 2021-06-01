@@ -6,7 +6,7 @@ void changeScreen(int screen);
 void ncPrint(const char * string, int fd);
 void ncPrintChar(char character, int color);
 void ncNewline();
-void ncClear();
+void ncClear(int currentScreen);
 void scroll();
 void drawLine();
 void clearLine(uint8_t * p);
