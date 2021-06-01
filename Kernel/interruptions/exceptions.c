@@ -1,56 +1,93 @@
 #include <naiveConsole.h>
+#include <exceptions.h>
+#include <time.h>
+
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OPERATION_ID 6
 
-static void zero_division();
+// valores de retorno de la excepcion
+uint64_t * ipReturn;
+uint64_t * rspReturn;
 
-void exceptionDispatcher(int exception, uint64_t * stackFrame) {
-	/*
-	if (exception == ZERO_EXCEPTION_ID)
-		zero_division(stackFrame);
-	if(exception == INVALID_OPERATION_ID)
-		invalid_operation(stackFrame);
-		*/
-	//habria que imprimit los registros
-	//hay que resetear la pantalla
+// void exceptionDispatcher(int exception, uint64_t * stackFrame) {
+void exceptionDispatcher(uint64_t exception, uint64_t * stackFrame) {
+	// por ahora manejamos estas dos excepciones	
+	if (exception == (uint64_t) 0 ) {
+		//zero_division(stackFrame);
+		zero_division();
+	}
+	else if(exception == INVALID_OPERATION_ID)
+		invalid_operation();
+	// en todas se imprimen los registros y se resetea
+	registerPrint(stackFrame);
 	return;
-
-	//en el main del kernel se envian los valores iniciales del RSP y de la primera y 
-	//se ejecuta la instruccion para el reinicio luego de una excepcion: setAddresses((uint64_t *)sampleCodeModuleAddress, getRSP());
-
-	//En lib.asm
-	//getRSP:
-	//mov rax, rsp
-	//ret
-
-	//void setAddresses(uint64_t * ip, uint64_t * rsp) {
-	//ipReturn = ip;
-	//rspReturn = rsp;
-	//}
 }
 
-/*
-static void invalid_operation(uint64_t * stackFrame){
+// setea los registros de retorno
+void setAddresses(uint64_t * ip, uint64_t * rsp) {
+	ipReturn = ip;
+	rspReturn = rsp;
+}
+
+void invalid_operation(){
 	ncPrint("Invalid code of operation", 0);
 	ncNewline();
 }
 
-static void zero_division(uint64_t * stackframe) {
+void zero_division() {
 	ncPrint("Zero division error ",0);
 	ncNewline();
 }
-*/
 
+void registerPrint(uint64_t * stackFrame) {
+	char buffer[9];
+	static const char *registersName[] = { "R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
+	for (int i = 0; i < 19; i++) {
+		ncPrint(registersName[i],0);
+		uintToBase(stackFrame[i], buffer, 16);
+		intToHexaStr(buffer);
+		ncPrint(buffer,0);
+		if (i> 0 && i % 3 == 0) {
+			ncNewline();
+		} else {
+			ncPrint("  ",0);
+		}
+	}
+	_sti();
+	ncPrint("La pantalla se reiniciara en ",0);
+	char buff[3] = {0};
+	// espera a una interrupcion
+	_hlt();
+	int init_time = seconds_elapsed();
+	int aux = 10;
+	int i = 10;
+	uintToBase(i, buff, 10);
+	ncPrint(buff,0);
+	while (i > 0) {
+		_hlt();
+		aux = 10 - (seconds_elapsed() - init_time);
+		if (i != aux) {
+			ncPrintChar(-10,0xD);
+			if (i == 10) {
+				ncPrintChar(-10,0xD);
+			}
+			i = aux;
+			uintToBase(i, buff, 10);
+			ncPrint(buff, 0);
+		}
+	}
+	ncNewline();
+}
 
 /*
-void exception0test() {
-	int a = 4/0;		<- RIP
-	printf("hola");			
-	printf("hola2");
-	return;
-}
-RIP -> 
-RSP -> ret 
-
-
-*/
+uint64_t registers[15];
+    static const char *registersName[] = {"RAX", "RBX", "RCX", "RDX", "RBP", "RDI", "RSI", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"};
+    //NOS FALTAN "RIP" "CS" "FLAGS" "RSP"
+    _getReg((uint64_t) registers);
+    for(int i = 0, j=14; i < 15; i++, j--) {
+         if( i > 0 && i % 3 == 0)
+            printf("\n");
+         printf("%s : %xh    ", registersName[i], registers[j]);
+    }
+    printf("\n");
+	*/

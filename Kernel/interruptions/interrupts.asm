@@ -12,9 +12,9 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+
 GLOBAL _exception0Handler
-
-
+GLOBAL _exception6Handler
 GLOBAL _int80Handler
 GLOBAL _getKey
 GLOBAL _RTC
@@ -66,7 +66,7 @@ SECTION .text
 %macro irqHandlerMaster 1
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
+	mov rdi, %1    ; pasaje de parametro
 	call irqDispatcher
 
 	; signal pic EOI (End of Interrupt)
@@ -77,23 +77,14 @@ SECTION .text
 	iretq
 %endmacro
 
-
-
 %macro exceptionHandler 1
-	mov rsi, rsp ;Puntero al stack generado por la excepcion
 	pushState
 	mov rdi, %1 ; pasaje de parametro
+	mov rsi, rsp   ; le paso el rsp para que tenga el stackframe
 	call exceptionDispatcher
 	popState
-
-	sti ;Reactivo las interrupciones
-	call getStackBase
-	mov [rsp + 4*8], rax ;restablezco el stack
-	mov rax, 0x400000 ; Direccion del SampleCodeModule
-	mov [rsp], rax
-	iretq ; Reinicio el shell
+	iretq 
 %endmacro
-
 
 _hlt:
 	sti
@@ -103,7 +94,6 @@ _hlt:
 _cli:
 	cli
 	ret
-
 
 _sti:
 	sti
@@ -150,10 +140,13 @@ _irq04Handler:
 _irq05Handler:
 	irqHandlerMaster 5
 
-
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;Invalid Instruction Exception
+_exception6Handler:
+	exceptionHandler 6
 
 haltcpu:
 	cli
@@ -181,6 +174,8 @@ _int80Handler:
 	
 	call sysHandler
 	sti
+	mov al, 20h
+	out 20h, al
 
 	mov rsp, rbp
 	pop rbp

@@ -7,11 +7,12 @@ char buffer[2][MAX_SIZE];
 char parameter[2][MAX_SIZE];
 int bIndex[2];
 int cB = 0; 
-void shell() {
 
+int Tflag = 0;
+void shell() {
     while(!exit) {
-        
         char c = getChar();
+        int a = 1/0;
         if( c == ESC ) {
             exit = 1;
         }
@@ -35,6 +36,9 @@ void shell() {
                     case 1: getTime(); break;
                     case 2: inforeg(); break;
                     case 3: getMem(parameter[cB]); break;
+                    case 5: 
+                        printf("entre");
+                        break;
                     default: break;
                 }
                 parameter[cB][0] = 0;
@@ -55,7 +59,7 @@ void shell() {
                buffer[cB][bIndex[cB]++] = c;
                buffer[cB][bIndex[cB]] = 0;
             }
-        }        
+        }     
     }
     printf("chau\n");
     return;

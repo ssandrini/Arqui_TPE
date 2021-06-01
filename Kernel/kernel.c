@@ -20,7 +20,7 @@ static void * const sampleCodeModuleAddress = (void*)0x400000;
 static void * const sampleDataModuleAddress = (void*)0x500000;
 
 typedef int (*EntryPoint)();
-
+extern uint64_t * _getRSP();
 
 void clearBSS(void * bssAddress, uint64_t bssSize)
 {
@@ -54,7 +54,9 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
+	setAddresses((uint64_t *)sampleCodeModuleAddress, _getRSP());
 	ncClear();
+	//int a = 1/0;
 	drawLine();
 	((EntryPoint)sampleCodeModuleAddress)();
 

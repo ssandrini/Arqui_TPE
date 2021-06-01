@@ -55,7 +55,7 @@ void getMem(char * param) {
 }
 
 void exc0Trigger() {
-    ;
+    int a = 5/0;
 }
 
 void exc6Trigger() {

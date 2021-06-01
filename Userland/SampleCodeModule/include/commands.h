@@ -9,6 +9,8 @@ void inforeg();
 void getMem(char * param);
 void getTime();
 int checkCommand(char * buffer, char * parameter);
+void exc0Trigger();
+void exc6Trigger();
 //int quadratic();
 //extern int _quadratic(long double a, long double b, long double c, long double r1, long double r2);
 extern void _getReg(uint64_t registers);

@@ -10,4 +10,6 @@ void ncClear();
 void scroll();
 void drawLine();
 void clearLine(uint8_t * p);
+uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
+void intToHexaStr(char * buff);
 #endif

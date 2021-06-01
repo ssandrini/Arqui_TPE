@@ -15,8 +15,6 @@ v2 _ _ _ _ _
  _ _ _ _ _ _
 
 */
-
-// static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 // static char buffer[64] = {'0'};
 uint8_t * video1 = (uint8_t*)0xB8000;
 uint8_t * video2 = (uint8_t*) (0xB8000 + WIDTH * 2 * (HEIGHT/2 +1));
@@ -143,5 +141,54 @@ void scroll() {
 		aux -= WIDTH * 2;
 		currentVideo2 = aux;
 		clearLine(currentVideo2);
+	}
+}
+
+// provisto por la catedra
+uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base)
+{
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
+}
+
+void intToHexaStr(char * buff) {
+	char auxStr[9] = "0x000000";
+	int dim = 0;
+	for (int i = 0; buff[i] != 0; i++) {
+		dim++;
+	}
+	for (int j = 7; j >= 0 && dim != 0; j--) {
+		auxStr[j] = buff[dim - 1];
+		dim--;
+	} 
+	for (int k = 0; k < 8; k++) {
+		buff[k] = auxStr[k];
 	}
 }
