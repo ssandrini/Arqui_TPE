@@ -12,7 +12,6 @@ int Tflag = 0;
 void shell() {
     while(!exit) {
         char c = getChar();
-        int a = 1/0;
         if( c == ESC ) {
             exit = 1;
         }

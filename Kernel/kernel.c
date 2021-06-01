@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include <idtLoader.h>
+#include <exceptions.h>
 
 #include <keyboard.h>
 #include <sysHandler.h>
