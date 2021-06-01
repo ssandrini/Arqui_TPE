@@ -2,15 +2,24 @@
 #define MAX_SIZE 100
 #define ESC 1
 #define TAB -12
+#define BSPACE -10
 int exit = 0;
+int exitUser;
 char buffer[2][MAX_SIZE];
 char parameter[2][MAX_SIZE];
 int bIndex[2];
-int cB = 0; 
+char user[2][MAX_SIZE/2];
+int uIndex[2];
+int cB = 0;
 char c = 0;
 int Tflag = 0;
+int firstTab = 1;
 void shell() {
+    
+    requestUser();
+
     while(!exit) {
+
         do {
             c = getChar();
         } while(c == 0);
@@ -26,6 +35,10 @@ void shell() {
                 cB--;
             }
             _changeScreen(cB);
+            if(firstTab){
+                requestUser();
+                firstTab = 0;
+            }
         }
         else if( c == '\n') {
             putChar(c);
@@ -50,16 +63,16 @@ void shell() {
             }
         }
         else if (c != 0 ) {
-            if(c == -10) {
+            if(c == BSPACE) {
                 if(bIndex[cB]>0){
                     putChar(c);
                     buffer[cB][--bIndex[cB]] = 0;
                 }
             }
             else {
-               putChar(c);
-               buffer[cB][bIndex[cB]++] = c;
-               buffer[cB][bIndex[cB]] = 0;
+                putChar(c);
+                buffer[cB][bIndex[cB]++] = c;
+                buffer[cB][bIndex[cB]] = 0;
             }
         }     
     }
@@ -67,3 +80,34 @@ void shell() {
     return;
 }
 
+void requestUser(){
+    uIndex[cB] = 0;
+    exitUser = 0;
+    printf("Bienvenido, ingrese su usuario: ");
+    while( !exitUser ){
+
+        do {
+            c = getChar();
+        } while(c == 0);
+
+        if(c == '\n' || c == ESC){
+            exitUser = 1;
+            if(c == ESC){exit = 1;}
+        }
+        else if(c == TAB){
+            ;//si oprime TAB mientras escribe el usuario no hace nada
+        }
+        else if(c == BSPACE){
+            if(uIndex[cB]>0){
+                putChar(c);
+                user[cB][--uIndex[cB]] = 0;
+            }
+        }else{
+            user[cB][uIndex[cB]++] = c;
+            user[cB][uIndex[cB]] = 0;
+            putChar(c);
+        }
+
+    }
+    clear(cB);
+}
