@@ -3,6 +3,7 @@
 #define ESC 1
 #define TAB -12
 #define BSPACE -10
+
 int exit = 0;
 int exitUser;
 char buffer[2][MAX_SIZE];
@@ -10,20 +11,24 @@ char parameter[2][MAX_SIZE];
 int bIndex[2];
 char user[2][MAX_SIZE/2] ={0};
 int uIndex[2];
-int cB = 0;
+int cB;
 char c = 0;
-int Tflag = 0;
-int firstTab = 1;
+int Tflag;
+int firstTab;
+
 void shell() {
-    
+    clear(0);
+    clear(1);
+    cB = 0;
+    _changeScreen(cB);
+    Tflag = 0;
+    firstTab = 1;
     requestUser();
     printf("%s: $ ", user[cB]);
 
     while(!exit) {
 
-        do {
-            c = getChar();
-        } while(c == 0);
+        c = getChar();
 
         if( c == ESC ) {
             exit = 1;
@@ -113,4 +118,5 @@ void requestUser(){
 
     }
     clear(cB);
+    printf("Bienvenido %s, si quiere cambiar a la otra terminal presione TAB\n", user[cB]);
 }
