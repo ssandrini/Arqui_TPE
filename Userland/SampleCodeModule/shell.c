@@ -8,7 +8,7 @@ int exitUser;
 char buffer[2][MAX_SIZE];
 char parameter[2][MAX_SIZE];
 int bIndex[2];
-char user[2][MAX_SIZE/2];
+char user[2][MAX_SIZE/2] ={0};
 int uIndex[2];
 int cB = 0;
 char c = 0;
@@ -17,6 +17,7 @@ int firstTab = 1;
 void shell() {
     
     requestUser();
+    printf("%s: $ ", user[cB]);
 
     while(!exit) {
 
@@ -37,6 +38,7 @@ void shell() {
             _changeScreen(cB);
             if(firstTab){
                 requestUser();
+                printf("%s: $ ", user[cB]);
                 firstTab = 0;
             }
         }
@@ -61,6 +63,7 @@ void shell() {
             else {
                 printf("El comando ingresado es invalido\n");
             }
+            printf("%s: $ ", user[cB]);
         }
         else if (c != 0 ) {
             if(c == BSPACE) {
