@@ -10,10 +10,10 @@
 #define CAPSLOCK 0x3A
 #define OFFSET 0x80
 #define BUFFER_SIZE 50
-unsigned char shiftFlag = 0;
-unsigned char ctrlFlag = 0;
+unsigned char mayuscFlag = 0;
 unsigned char buffer[BUFFER_SIZE]={0};
 unsigned int buffIndex = 0;
+
 //IMPORTANTE, TENEMOS QUE ACLARAR EN EL INFORME EL TIPO DE TECLADO QUE ASUMIMOS
 const char ascii_values[0x56][2] =
 {
@@ -22,7 +22,7 @@ const char ascii_values[0x56][2] =
     {'1','!'},{'2','@'},{'3','#'},{'4','$'},{'5','$'},{'6','^'},{'7','&'},{'8','*'},{'9','('},{'0',')'},{'-','_'},{'=','+'},{-10,-10},
     {-12,-12},{'q','Q'},{'w','W'},{'e','E'},{'r','R'},{'t','T'},{'y','Y'},{'u','U'},{'i','I'},{'o','O'},{'p','P'},{'[','{'},{']','}'},
     {'\n','\n'},
-    {0,0},{'a','A'},{'s','S'},{'d','D'},{'f','F'},{'g','G'},{'h','H'},{'j','J'},{'k','K'},{'l','L'},{';',':'},{'\'','\"'},
+    {CAPSLOCK,CAPSLOCK},{'a','A'},{'s','S'},{'d','D'},{'f','F'},{'g','G'},{'h','H'},{'j','J'},{'k','K'},{'l','L'},{';',':'},{'\'','\"'},
     {'`','~'},
     {0,0},
     {'\\','|'},
@@ -41,18 +41,17 @@ void keyboard_handler()
         unsigned char key = _getKey();
         switch (key)
         {
-            case LEFT_SHIFT : case RIGHT_SHIFT :
-                shiftFlag = 1;
-                break;
-            case LEFT_SHIFT + OFFSET : case RIGHT_SHIFT + OFFSET :
-                shiftFlag = 0;
+            // dejamos un switch por si se agregan mas teclas especiales en un futuro
+            // o por si se diferencia entre los shifts   
+            case LEFT_SHIFT : case RIGHT_SHIFT :   
+            case LEFT_SHIFT + OFFSET : case RIGHT_SHIFT + OFFSET: 
+            case CAPSLOCK :
+                mayuscFlag = (mayuscFlag == 1) ? 0 : 1;
                 break;
             default:
                 if(key < 0x56) {
-                    
                     buffer[buffIndex++] = getAscii(key);
                     buffer[buffIndex] = 0;
-                    // ncPrintChar(getAscii(key), 13);
                 }
                 break;
         }
@@ -61,7 +60,7 @@ void keyboard_handler()
 }
 
 char getAscii(unsigned int key) {
-    if(shiftFlag)
+    if(mayuscFlag)
         return ascii_values[key][1];
     else
         return ascii_values[key][0];

@@ -9,19 +9,19 @@ int exitUser;
 char buffer[2][MAX_SIZE];
 char parameter[2][MAX_SIZE];
 int bIndex[2];
-char user[2][MAX_SIZE/2] ={0};
+char user[2][MAX_SIZE/2];
 int uIndex[2];
 int cB;
 char c = 0;
-int Tflag;
 int firstTab;
+
+void (*func_ptr[COMMANDS_SIZE])() = {help, getTime, inforeg, getMem, cpuid,  exc0Trigger, exc6Trigger, quadratic , clear};
 
 void shell() {
     clear(0);
     clear(1);
     cB = 0;
     _changeScreen(cB);
-    Tflag = 0;
     firstTab = 1;
     requestUser();
     printf("%s: $ ", user[cB]);
@@ -34,12 +34,7 @@ void shell() {
             exit = 1;
         }
         else if( c == TAB ){
-            if(cB == 0){
-                cB++;
-            }
-            else{
-                cB--;
-            }
+            cB = (cB == 0) ? 1 : 0;
             _changeScreen(cB);
             if(firstTab){
                 requestUser();
@@ -53,16 +48,12 @@ void shell() {
             buffer[cB][0] = 0;
             bIndex[cB] = 0;
             if(isCommand >= 0) {
-                switch(isCommand) {
-                    case 0: help(); break;
-                    case 1: getTime(); break;
-                    case 2: inforeg(); break;
-                    case 3: getMem(parameter[cB]); break;
-                    case 5: exc0Trigger();break;
-                    case 6: exc6Trigger();break;
-                    case 8: clear(cB);break;
-                    default: break;
-                }
+                if(isCommand == 3)
+                    func_ptr[isCommand](parameter[cB]);
+                else if(isCommand == 8)
+                    func_ptr[isCommand](cB);
+                else
+                    func_ptr[isCommand]();
                 parameter[cB][0] = 0;
             }
             else {

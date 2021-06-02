@@ -1,9 +1,5 @@
 #include <commands.h>
 
-#define COMMANDS_SIZE 9
-#define CASE_GETMEM 3
-#define LENGTH_PRINTMEM 8
-
 char commandsNames[9][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic","clear"};
 char info[3][150] = {"inforeg: imprime en pantalla el valor de todos los registros \n",
 "printmem DIR : realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
@@ -94,19 +90,23 @@ int checkCommand(char * buffer, char * parameter) {
     return -1;
 }
 
-// int quadratic() {
-//     // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
-//     // los puse fijos para probar
-//     long double r1, r2, a, b, c;
-//     a = (long double) 1;
-//     b = (long double) -2;
-//     c = (long double) -10;    
-//     int aux = _quadratic(&a,&b,&c, &r1,&r2);
-//     if(aux == 0) {
-//         printf("No se pudo encontrar las raices\n");
-//     } else {
-//         printf("las encontre, todavia no tenemos hecho el soporte para %Lf");
-//         // printf("r1: %Lf %Lf \n",r1,r2);
-//     }
-//     //return aux;?
-// }
+void quadratic() {
+    // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
+    // los puse fijos para probar
+    long double r1, r2, a, b, c;
+    a = (long double) 1;
+    b = (long double) -2;
+    c = (long double) -10;  
+    int aux = _quadratic(&a,&b,&c, &r1,&r2);
+    if(aux == 0) {
+        printf("No se pudo encontrar las raices\n");
+    } else {
+        printf("las encontre, todavia no tenemos hecho el soporte para % Lf\n");
+        // printf("r1: %Lf %Lf \n",r1,r2);
+    }
+    //return aux;?
+}
+
+void cpuid() {
+    ;
+}

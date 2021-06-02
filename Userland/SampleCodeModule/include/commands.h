@@ -3,6 +3,9 @@
 #include <lib2.h>
 #include <stdint.h>
 
+#define COMMANDS_SIZE 9
+#define CASE_GETMEM 3
+#define LENGTH_PRINTMEM 8
 
 void help();
 void inforeg();
@@ -12,8 +15,9 @@ int checkCommand(char * buffer, char * parameter);
 void exc0Trigger();
 void exc6Trigger();
 void clear(int cB);
-//int quadratic();
-//extern int _quadratic(long double a, long double b, long double c, long double r1, long double r2);
+void quadratic();
+void cpuid();
+extern int _quadratic(long double * a, long double * b, long double * c, long double * r1, long double * r2);
 extern void _exc6Trigger();
 extern void _getReg(uint64_t registers);
 extern void _getMem(uint32_t * dir, uint32_t * memory);
