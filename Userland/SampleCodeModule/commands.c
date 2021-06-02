@@ -108,5 +108,17 @@ void quadratic() {
 }
 
 void cpuid() {
-    ;
+    uint32_t rcx_f; 
+    uint32_t rcx_sf;
+    uint32_t rbx_sf;
+    uint32_t rdx_f;
+    int ok = _getCpuInfo(&rcx_f, &rdx_f,FEATURES_ID);
+    int ok_sf = _getCpuInfo(&rcx_f, &rdx_f,SPECIAL_FEATURES_ID);
+
+    if(ok == 0) {
+        printf("Este procesador no soporta la instruccion CPUID\n");
+    }
+    else {
+        printf("");
+    }
 }

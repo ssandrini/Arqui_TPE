@@ -7,6 +7,7 @@ GLOBAL _changeScreen
 GLOBAL _clearScreen
 GLOBAL _quadratic
 GLOBAL _exc6Trigger
+GLOBAL _getCpuInfo
 section .text
 
 _write:
@@ -141,3 +142,14 @@ _quadratic:
 _exc6Trigger:
 	UD2
 	ret
+
+_getCpuInfo:
+    push rbp
+    mov rbp, rsp
+                    ; en rdi viene el cB
+    mov rax, 7   ; llamada a la syscall clearScreen
+    int 80h
+    
+    mov rsp, rbp
+    pop rbp
+    ret
