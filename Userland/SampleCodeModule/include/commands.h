@@ -27,3 +27,4 @@ extern void _clearScreen(int cB);
 extern int _getCpuInfo(uint32_t * r1, uint32_t * r2, int * features_id_and_ret);
 
 #endif
+    

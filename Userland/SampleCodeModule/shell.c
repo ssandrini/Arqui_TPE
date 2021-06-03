@@ -75,7 +75,14 @@ void shell() {
             }
         }     
     }
-    printf("chau\n");
+    clear(cB);
+    printf("hasta luego %s.", user[cB]);
+    if(!firstTab){
+        int aux = (cB == 1) ? 0 : 1;
+        _changeScreen(aux);
+        clear(aux);
+        printf("hasta luego %s.", user[aux]);
+    }
     return;
 }
 
@@ -85,28 +92,26 @@ void requestUser(){
     printf("Bienvenido, ingrese su usuario: ");
     while( !exitUser ){
 
-        do {
-            c = getChar();
-        } while(c == 0);
+        c = getChar();
 
         if(c == '\n' || c == ESC){
             exitUser = 1;
             if(c == ESC){exit = 1;}
-        }
-        else if(c == TAB){
-            ;//si oprime TAB mientras escribe el usuario no hace nada
         }
         else if(c == BSPACE){
             if(uIndex[cB]>0){
                 putChar(c);
                 user[cB][--uIndex[cB]] = 0;
             }
-        }else{
+        }
+        else if(c == TAB) {
+            ; // por ahora aca no se permite el tab
+        }
+        else if( c != 0 ) {
             user[cB][uIndex[cB]++] = c;
             user[cB][uIndex[cB]] = 0;
             putChar(c);
         }
-
     }
     clear(cB);
     printf("Bienvenido %s, si quiere cambiar a la otra terminal presione TAB\n", user[cB]);

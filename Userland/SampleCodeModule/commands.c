@@ -93,13 +93,26 @@ int checkCommand(char * buffer, char * parameter) {
 void quadratic() {
     // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
     // los puse fijos para probar
-    long double r1, r2, a, b, c;
-    a = (long double) 1;
-    b = (long double) -2;
-    c = (long double) -10;  
-    int aux = _quadratic(&a,&b,&c, &r1,&r2);
+    long double r1, r2;
+    char buffs[3][15];
+    char abc[3] = {'a', 'b', 'c'}; 
+    long double abcNum[3];
+    printf("Ingrese los valores de los coeficientes de la funcion cuadratica\n");
+    for(int i = 0; i<3; i++) {
+        printf("%c = ",abc[i]);
+        int length = readNumFromLine(buffs[i]);
+        if(length <= 0) {
+            printf("\nValor incorrecto. Debe ser un numero\n");
+            return;
+        }
+        stringToDouble(buffs[i], &abcNum[i]);
+    }
+    char buffsAux[3][15];
+    
+    
+    int aux = _quadratic(&abcNum[0],&abcNum[1],&abcNum[2], &r1,&r2);
     if(aux == 0) {
-        printf("No se pudo encontrar las raices\n");
+        printf("Las raíces no son reales \n");
     } else {
         char root1[60];
         char root2[60];
@@ -109,7 +122,8 @@ void quadratic() {
         printf("root1 = %s \n", root1);
         printf("root2 = %s \n", root2);
     }
-    //return aux;?
+    
+    
 }
 
 void cpuid() {

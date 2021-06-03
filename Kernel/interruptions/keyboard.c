@@ -48,6 +48,8 @@ void keyboard_handler()
             case CAPSLOCK :
                 mayuscFlag = (mayuscFlag == 1) ? 0 : 1;
                 break;
+            case LEFT_CONTROL:  // por ahora no tiene funcionalidad
+                break;
             default:
                 if(key < 0x56) {
                     buffer[buffIndex++] = getAscii(key);
