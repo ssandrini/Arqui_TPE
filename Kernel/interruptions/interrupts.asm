@@ -19,8 +19,8 @@ GLOBAL _int80Handler
 GLOBAL _getKey
 GLOBAL _keyPressed
 GLOBAL _RTC
-GLOBAL _getRegisters
-
+GLOBAL _cpuid
+GLOBAL _cpuidSupport
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN sysHandler
@@ -178,7 +178,8 @@ _getKey:
 _int80Handler:
 	pushState
 	
-	mov rcx, rsp
+	mov r8, rsp
+	mov rcx, rdx
 	mov rdx, rsi
 	mov rsi, rdi
 	mov rdi, rax
@@ -206,22 +207,46 @@ _RTC:
 	pop rbp
 	ret
 
-_getRegisters: ; vino la direccion del uint64 * en rdi
+; devuelve 1 si el micro soporta la instruccion cpuid y 0 sino
+_cpuidSupport:
 	push rbp
 	mov rbp, rsp
-	pushState
-	mov rcx, 15  ; for(int i = 0 ; i< 18 ; i++)
-	mov rax, 0 	 ; i
-.loop: 
-	pop rdx 
-	mov [rdi+rax*8], rdx
-	inc rax
-	cmp rax, rcx
-	je .end
-	jmp .loop
-.end:
+	push rbx  			; pusheo rbx porque desp lo voy a usar
+	pushfq    			; pusheo el registro de flags
+	pop rax   			; lo meto en rax
+	mov rbx, rax		; lo guardo en rbx
+
+	xor rax, 200000h 	; seteo el ID flag en 1
+	push rax		    ; pusheo este registro
+	popfq		 		; popeo los flags
+	pushfq		 		; pusheo los flags
+	pop rax		 		; los popeo en rax
+	cmp rax, rbx	 	; los comparo con los flags viejos
+
+	jz .no_support	
+	pop rbx
+	mov rax, 1
 	mov rsp, rbp
 	pop rbp
+	ret
+
+.no_support:
+	pop rbx
+	mov rax, 0
+	mov rsp, rbp
+	pop rbp
+	ret
+
+;int _cpuid(uint32_t * r1,uint32_t * r2, int * id);
+; 				rdi 		rsi			  rdx
+_cpuid:
+	push rcx
+	mov rax, [rdx]
+	mov rcx, 0
+	cpuid
+	mov dword [rdi], ecx
+	mov dword [rsi], edx
+	pop rcx
 	ret
 
 SECTION .bss

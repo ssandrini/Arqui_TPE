@@ -108,17 +108,88 @@ void quadratic() {
 }
 
 void cpuid() {
-    uint32_t rcx_f; 
-    uint32_t rcx_sf;
-    uint32_t rbx_sf;
-    uint32_t rdx_f;
-    int ok = _getCpuInfo(&rcx_f, &rdx_f,FEATURES_ID);
-    int ok_sf = _getCpuInfo(&rcx_f, &rdx_f,SPECIAL_FEATURES_ID);
+    uint32_t r1; 
+    uint32_t r2;
 
-    if(ok == 0) {
-        printf("Este procesador no soporta la instruccion CPUID\n");
+    uint32_t masks1[8]= {     0x1,             0x2,             0x1000,        0x80000,        0x100000,       0x2000000,      0x10000000,     0x20000000};
+    char namesr1[8][20] = { "sse3_support", "pclmulqdq_support", "fma_support", "sse41_support", "sse42_support", "aesni_support", "avx_support", "f16c_support"};
+//              bit =        0                   1                 12              19               20              25              28              29
+
+
+    uint32_t masks2[3] = {0x800000,    0x2000000,      0x4000000};
+    char namesr2[3][20] = {"mx_support", "sse_support", "sse2_support"};
+//              bit =       23              25          26
+
+
+    uint32_t sMasks1[2] = {   0x200     ,        0x400        };
+    char snamesr1[2][20] = {"vaesni_support", "vpclmulqdq_support"};
+//              bit =           9                  10
+
+
+    uint32_t sMasks2 =   0x20;
+    char * snamesr2 = "avx2_support"; 
+//              bit =     5
+
+
+    int ok = FEATURES_ID;
+    _getCpuInfo(&r1, &r2, &ok); 
+    printf("ok = %d ", ok);
+    if(ok) {
+        printf("cpuid_support : 1 \n");
     }
     else {
-        printf("");
+        printf("cpuid_support : 0 \n");
+        return;
     }
+
+    int aux;
+   printf("%x \n", (int) r1);
+   printf("%x \n", (int) r2);
+    for(int i = 0; i < 8; i++){
+        if( masks1[i] & r1 > 0 )
+            aux = 1;
+        else
+            aux = 0;
+        if( i > 0 && i % 3 == 0 )
+            printf("\n");
+
+        printf("%s : %d  ", namesr1[i], aux);
+        
+    }
+    
+
+    for(int i = 0; i < 3; i++){
+        if( masks2[i] & r2 > 0 )
+            aux = 1;
+        else
+            aux = 0;
+        if( i == 2 )
+            printf("\n");
+
+        printf("%s : %d  ", namesr2[i], aux);
+    }
+    
+    printf("\n");   
+    printf("%x \n", (int) r1);
+    printf("%x \n", (int) r2);
+
+    ok = SPECIAL_FEATURES_ID;
+    _getCpuInfo(&r1, &r2, &ok);
+    
+    for(int i = 0; i < 2; i++){
+        if( sMasks1[i] & r1 > 0 )
+            aux = 1;
+        else
+            aux = 0;
+        if( i == 1 )
+            printf("\n");
+
+        printf("%s : %d  ", snamesr1[i], aux);
+    }
+    printf("\n");
+    printf("%s : %d \n", snamesr2, (sMasks2 & r2 > 0 )? 1 : 0); 
+
+    printf("%x \n", (int) r1);
+    printf("%x \n", (int) r2);
+    
 }

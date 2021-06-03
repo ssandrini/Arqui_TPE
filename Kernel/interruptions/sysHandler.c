@@ -1,7 +1,7 @@
 #include <sysHandler.h>
 #include <naiveConsole.h>
 
-void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t rsp){
+void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t r3, uint64_t rsp){
     switch (sysNumber)
     { 
         case 0: // sysRead  r1=buffer r2=10
@@ -24,6 +24,9 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t rsp){
             break;
         case 6: // sysClearScreen
             clearScreen((int)r1); 
+            break;
+        case 7: // sysGetCpuInfo (en este caso el tercer parametro representa el ID)
+            getInfo((uint32_t *) r1, (uint32_t *) r2, (int *) r3) ;
             break;
         default: 
             //potncial print error
@@ -77,4 +80,13 @@ void getMem(uint32_t * dir, uint32_t * vec) {
 
 void clearScreen(int currentScreen) {
     ncClear(currentScreen);
+}
+
+void getInfo(uint32_t * r1, uint32_t * r2, int * id) {
+    if (_cpuidSupport()) {
+        _cpuid(r1,r2,id);
+        *id = 1;
+    }
+    else
+        *id = 0;
 }

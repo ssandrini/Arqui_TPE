@@ -143,11 +143,35 @@ _exc6Trigger:
 	UD2
 	ret
 
+;-----------------------------------------------------------------------------------;
+;_getCpuInfo(&rg1, &rg2, &id);                                                      ;    
+; esta syscall devuelve dos datos de 32 bits con las features del procesador.       ;
+; si se indica el flag id=1 devuelve las comunes y                                  ;
+; y si el flag id=7  devuelve las special                                           ;
+; ademas en id se setea en 0 o en 1 si soporta la instruccion cpuid o no.           ;
+;-----------------------------------------------------------------------------------;
+; caso ID = 0                      |                     caso ID = 1                ;
+;-----------------------------------------------------------------------------------;
+; en rg1 tiene cargado:            |                 en rg1 tiene cargado:          ;    
+; sse3_support, (bit0)             |                 vaesni_support (bit9)          ;
+; pclmulqdq_support (bit1)         |                 vpclmulqdq_support (bit10)     ;
+; fma_support (bit12)              |                                                ;
+; sse41_support, (bit19)           |                                                ;
+; sse42_support (bit20)            |                                                ;
+; aesni_support (bit25)            |                                                ;
+; avx_support (bit28)              |                                                ;
+; f16c_support (bit29)             |                                                ;
+;-----------------------------------------------------------------------------------;
+; en rg2 tiene cargado:            |                  en rg2 tiene cargado:         ;
+; mx_support   (bit23)             |                  avx2_support (bit5)           ;
+; sse_support   (bit25)            |                                                ;
+; sse2_support (bit26)             |                                                ;
+;-----------------------------------------------------------------------------------;
 _getCpuInfo:
     push rbp
     mov rbp, rsp
-                    ; en rdi viene el cB
-    mov rax, 7   ; llamada a la syscall clearScreen
+                    
+    mov rax, 7      ; llamada a la syscall cpuInfo
     int 80h
     
     mov rsp, rbp
