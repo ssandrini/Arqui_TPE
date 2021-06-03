@@ -201,3 +201,36 @@ int strcmp(char *s1, char *s2){
      }
      return ans;
  }
+
+ void doubleToString(long double result, char * buffer){
+    int integer_part = (int) result;
+    result = (result - integer_part) * pow(10,8);
+    int decimal_part = (int) result;
+    if( decimal_part < 0 )
+        decimal_part = - decimal_part;
+    
+  //  int numToStr(int value, char *buffer, int base)
+    char aux[40];
+    // aux = 14
+    int len = numToStr(integer_part, aux, 10);
+    
+    aux[len] = '.';
+    
+    numToStr(decimal_part, aux + len + 1, 10);
+    strcpy(buffer, aux);
+ }
+
+
+ /*
+
+
+    long double a = 3.1415928;
+    int parteEntera = (int) a;
+    a = a - parteEntera;         // a = 0.14159228
+    a = a*100000000000; 
+    long long parteDecimal = (int) a;
+    printf("%d.%lld",parteEntera,parteDecimal);
+    return 0;
+*/
+
+

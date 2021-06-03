@@ -16,4 +16,5 @@ int strcmp(char * s1, char *s2);
 int strToInt(char *str, int* size);
 uint32_t * hexaStrToDir(char * hexaStr);
 int pow(int base, int e);
+void doubleToString(long double result, char * root);
 #endif

@@ -244,10 +244,18 @@ _cpuid:
 	mov rax, [rdx]
 	mov rcx, 0
 	cpuid
-	mov dword [rdi], ecx
-	mov dword [rsi], edx
+	cmp dword[rdx], 7h
+	je .special
+	mov dword[rdi], ecx
+	mov dword[rsi], edx
 	pop rcx
 	ret
+.special:
+	mov dword[rdi], ecx
+	mov dword[rsi], ebx
+	pop rcx
+	ret
+
 
 SECTION .bss
 	aux resq 1
