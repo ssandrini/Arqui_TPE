@@ -14,8 +14,8 @@ _write:
     push rbp
     mov rbp, rsp
                     ; en rdi estaria el puntero a la string para imprimir
+                    ; en rsi esta el color
     mov rax, 1     
-    mov rsi, 0Fh    ; color
     int 80h         ; llamada a la syscall write 
 
     mov rsp, rbp

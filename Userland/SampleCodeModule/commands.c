@@ -19,7 +19,7 @@ void getTime() {
     int date[3]; int hour[3]; 
     _getTime(date,hour);
     printf("fecha: ");
-    printf(" %d : %d : %d \n", date[2], date[1], date[0]);
+    printf(" %d / %d / %d \n", date[2], date[1], date[0]);
     printf("hora: ");
     printf(" %d : %d : %d \n", hour[0], hour[1], hour[2]);
 }

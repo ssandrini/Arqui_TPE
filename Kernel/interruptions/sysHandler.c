@@ -8,7 +8,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t r3, uint6
             read((unsigned char *)r1, (unsigned int)r2);
             break;
         case 1: // sysWrite 
-            ncPrint((const char *) r1, r2); //en r1 iria un string y en r2 el fd 
+            ncPrint((const char *) r1, (int) r2); //en r1 iria un string y en r2 el color
             break;
         case 2: // sysGetTime
             getTimeRTC(r1, r2); // en r1 dia mes año y en r2 horas min seg

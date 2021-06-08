@@ -11,7 +11,7 @@ void putChar(const char ascii)
     char toPrint[2];
     toPrint[0] = ascii;
     toPrint[1] = 0;
-    _write(toPrint);
+    _write(toPrint, 0xFFFFFF);
 }
 
 char getChar()
@@ -151,7 +151,7 @@ void printf(char *str, ...)
         }
         i++;
     }
-    _write(buff);
+    _write(buff,0xFFFFFF);
     va_end(args);
 }
 
@@ -318,4 +318,12 @@ void stringToDouble(char * string, long double * num){
     ipart = strToInt(intPart);
     dpart = strToInt(doublePart);
     *num = ipart + (long double) dpart / pow(10, strlen(doublePart)); 
+}
+
+void printUser(char * name) {
+    _write(name, 0x51AEAE);
+}
+
+void printError(char * err) {
+    _write(err, 0xFF0000);
 }

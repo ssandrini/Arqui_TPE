@@ -91,23 +91,13 @@ void writeLetter(int key, int posX, int posY, int letter_color) {
 // dibuja una linea a lo largo del ancho
 void drawLine(int y) {
 	for (int i = 0; i < WIDTH; i++) {
-		writePixel(i,y, 0xFFFFFF);
+		writePixel(i,y, 0xFF0080);
 	}
 }
 
 // pinta una linea de negro
 void clearLine(int y_initial) {
-	for (int i = y_initial; i <= LETTER_HEIGHT; i++) {
-        for (int j = 0; j < WIDTH; j++) {
-            writePixel(j, i, 0xFFFFFF);
-        }
-    }
-} 
-
-void setSegmentBlank(int x_initial, int x_final, int y_initial, int y_final, int background_color) {
-	for (int i = y_initial; i <= y_final; i++) {
-        for (int j = x_initial; j < x_final; j++) {
-            writePixel(j, i, background_color);
-        }
-    }
+	for (int j = 0; j < WIDTH; j++) {
+		writePixel(j, y_initial,BACKGROUND_COLOR);
+	}
 } 

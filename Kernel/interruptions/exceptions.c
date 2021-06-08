@@ -31,12 +31,12 @@ void setAddresses(uint64_t * ip, uint64_t * rsp) {
 }
 
 void invalid_operation(){
-	ncPrint("Invalid code of operation", 0);
+	ncPrint("Invalid code of operation", 0xFF0000);
 	ncNewLine();
 }
 
 void zero_division() {
-	ncPrint("Zero division error ",0);
+	ncPrint("Zero division error ",0xFF0000);
 	ncNewLine();
 }
 
@@ -44,18 +44,18 @@ void registerPrint(uint64_t * stackFrame) {
 	char buffer[9];
 	static const char *registersName[] = { "R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
 	for (int i = 0; i < 19; i++) {
-		ncPrint(registersName[i],0);
+		ncPrint(registersName[i],0xFF0000);
 		uintToBase(stackFrame[i], buffer, 16);
 		intToHexaStr(buffer);
-		ncPrint(buffer,0);
+		ncPrint(buffer,0xFF0000);
 		if (i> 0 && i % 3 == 0) {
 			ncNewLine();
 		} else {
-			ncPrint("  ",0);
+			ncPrint("  ",0xFF0000);
 		}
 	}
 	_sti();
-	ncPrint("La pantalla se reiniciara en ",0);
+	ncPrint("La pantalla se reiniciara en ",0xFF0000);
 	char buff[3] = {0};
 	// espera a una interrupcion
 	_hlt();
@@ -63,19 +63,19 @@ void registerPrint(uint64_t * stackFrame) {
 	int aux = 10;
 	int i = 10;
 	uintToBase(i, buff, 10);
-	ncPrint(buff,0);
+	ncPrint(buff,0xFF0000);
 	while (i > 0) {
 		_hlt();
 		aux = 10 - (seconds_elapsed() - init_time);
 		if (i != aux) {
-			char bspace = B_SPACE;
-			ncPrint(&bspace,0);
+			char bspace[2] = {B_SPACE,0};
+			ncPrint(bspace,0xFF0000); 
 			if (i == 10) {
-				ncPrint(&bspace,0);
+				ncPrint(bspace,0xFF0000);
 			}
 			i = aux;
 			uintToBase(i, buff, 10);
-			ncPrint(buff, 0);
+			ncPrint(buff, 0xFF0000);
 		}
 	}
 	ncNewLine();

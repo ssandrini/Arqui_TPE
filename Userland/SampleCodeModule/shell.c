@@ -24,7 +24,8 @@ void shell() {
     _changeScreen(cB);
     firstTab = 1;
     requestUser();
-    printf("%s: $ ", user[cB]);
+    printUser(user[cB]);
+    printUser(":$ ");
 
     while(!exit) {
 
@@ -38,7 +39,8 @@ void shell() {
             _changeScreen(cB);
             if(firstTab){
                 requestUser();
-                printf("%s: $ ", user[cB]);
+                printUser(user[cB]);
+                printUser(":$ ");
                 firstTab = 0;
             }
         }
@@ -57,11 +59,12 @@ void shell() {
                 parameter[cB][0] = 0;
             }
             else {
-                printf("El comando ingresado es invalido\n");
+                printError("El comando ingresado es invalido\n");
             }
-            printf("%s: $ ", user[cB]);
-        }
-        else if (c != 0 ) {
+            printUser(user[cB]);
+            printUser(":$ ");        
+            
+        }else if (c != 0 ) {
             if(c == BSPACE) {
                 if(bIndex[cB]>0){
                     putChar(c);
@@ -69,9 +72,11 @@ void shell() {
                 }
             }
             else {
-                putChar(c);
-                buffer[cB][bIndex[cB]++] = c;
-                buffer[cB][bIndex[cB]] = 0;
+                if(bIndex[cB] < MAX_SIZE ) {
+                    putChar(c);
+                    buffer[cB][bIndex[cB]++] = c;
+                    buffer[cB][bIndex[cB]] = 0;
+                }
             }
         }     
     }
@@ -108,9 +113,11 @@ void requestUser(){
             ; // por ahora aca no se permite el tab
         }
         else if( c != 0 ) {
-            user[cB][uIndex[cB]++] = c;
-            user[cB][uIndex[cB]] = 0;
-            putChar(c);
+            if( uIndex[cB] < MAX_SIZE/2 ) {
+                user[cB][uIndex[cB]++] = c;
+                user[cB][uIndex[cB]] = 0;
+                putChar(c);
+            }
         }
     }
     clear(cB);

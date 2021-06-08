@@ -1,7 +1,7 @@
 #ifndef __LIB2_H__
 #define __LIB2_H__
 #include <stdint.h>
-extern void _write(char * string);
+extern void _write(char * string, int color);
 extern void _getBuffer(char * buffer, int bytes);
 void printf(char *str, ...); 
 void putChar(const char ascii);
@@ -19,4 +19,6 @@ void doubleToString(long double result, char * root);
 int readNumFromLine(char * dest);
 void stringToDouble(char * string, long double * num);
 int strcpyTilPoint(char *destination, const char *source);
+void printUser(char * name);
+void printError(char * err);
 #endif

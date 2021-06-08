@@ -55,14 +55,11 @@ int main()
 {	
 	load_idt();
 	setAddresses((uint64_t *)sampleCodeModuleAddress, _getRSP()); // exceptions
-	drawLine(300);
-	setSegmentBlank(0, 1024, 300, 301, 0x000000);
-	drawLine(450);
-	// ncClear(0); 
-	// ncClear(1); 
+	ncClear(0); 
+	ncClear(1); 
 	middleLine(); 
 
-	//((EntryPoint)sampleCodeModuleAddress)();
+	((EntryPoint)sampleCodeModuleAddress)();
 
 	return 0;
 }
