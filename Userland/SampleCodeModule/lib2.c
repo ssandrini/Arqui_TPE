@@ -250,14 +250,16 @@ int readNumFromLine(char * dest)
     currentIdx = 0;
     int c;
     int pointFlag=0;
+    int errorFlag=0;
     while ((c = getChar()) != '\n' )
-    {
+    {    
         if (c == BSPACE)
         {
             if (currentIdx > 0)
             {
                 currentIdx--;
                 putChar(BSPACE);
+                errorFlag = 0;
             }
         }
         else if (c != 0)
@@ -265,7 +267,10 @@ int readNumFromLine(char * dest)
             if (currentIdx < BSIZE - 1)
             {
                 if( (c == '-' && currentIdx != 0) || (pointFlag && c == '.') )  {
-                    return -1;
+                    putChar(c); 
+                    auxBuffer[currentIdx++] = c;
+                    //printf("\nValor incorrecto. Debe ser un numero.\n");
+                    errorFlag= 1;
                 }
                 if( (c <= '9' && c >= '0') || c == '.' || c == '-'){
                     putChar(c); 
@@ -275,11 +280,16 @@ int readNumFromLine(char * dest)
 
                 }
                 else {
-                    return -1;
+                    putChar(c); 
+                    auxBuffer[currentIdx++] = c;
+                    //printf("\nValor incorrecto. Debe ser un numero.\n");
+                    errorFlag = 1;
                 }
             }
         }
     }
+    if(errorFlag ==1)
+        return -1;
     if(currentIdx == 0)
         return -1;
     putChar('\n');
