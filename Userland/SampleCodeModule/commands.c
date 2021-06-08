@@ -101,20 +101,20 @@ void quadratic() {
     for(int i = 0; i<3; i++) {
         printf("%c = ",abc[i]);
         int length = readNumFromLine(buffs[i]);
-        if(length <= 0) {
+        if(length <= -1) {
             printf("\nValor incorrecto. Debe ser un numero.\n");
             return;
         }
         stringToDouble(buffs[i], &abcNum[i]);
     }
-    
+
     if (abcNum[0] >= 0 - EPSILON && abcNum[0] <= 0 + EPSILON){
         printf("\nValor incorrecto. a debe ser distinto de 0 \n");
         return;
     } 
     int aux = _quadratic(&abcNum[0],&abcNum[1],&abcNum[2], &r1,&r2);
     if(aux == 0) {
-        printf("Las raíces no son reales \n");
+        printf("Las raices no son reales \n");
     } else {
         char root1[60];
         char root2[60];
