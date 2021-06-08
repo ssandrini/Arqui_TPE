@@ -21,4 +21,5 @@ void stringToDouble(char * string, long double * num);
 int strcpyTilPoint(char *destination, const char *source);
 void printUser(char * name);
 void printError(char * err);
+void printTitle(char * title);
 #endif

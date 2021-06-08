@@ -269,7 +269,6 @@ int readNumFromLine(char * dest)
                 if( (c == '-' && currentIdx != 0) || (pointFlag && c == '.') )  {
                     putChar(c); 
                     auxBuffer[currentIdx++] = c;
-                    //printf("\nValor incorrecto. Debe ser un numero.\n");
                     errorFlag= 1;
                 }
                 if( (c <= '9' && c >= '0') || c == '.' || c == '-'){
@@ -282,7 +281,6 @@ int readNumFromLine(char * dest)
                 else {
                     putChar(c); 
                     auxBuffer[currentIdx++] = c;
-                    //printf("\nValor incorrecto. Debe ser un numero.\n");
                     errorFlag = 1;
                 }
             }
@@ -293,7 +291,6 @@ int readNumFromLine(char * dest)
     if(currentIdx == 0)
         return -1;
     putChar('\n');
-    // ese ++ creo que no va, el ultimo
     auxBuffer[currentIdx++] = '\0';
     strcpy(dest, auxBuffer);
     return currentIdx;
@@ -336,4 +333,8 @@ void printUser(char * name) {
 
 void printError(char * err) {
     _write(err, 0xFF0000);
+}
+
+void printTitle(char * title) {
+    _write(title, 0x008F39);
 }

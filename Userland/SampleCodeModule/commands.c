@@ -31,7 +31,8 @@ void inforeg() {
     for(int i = 0; i < 19; i++) {
          if( i > 0 && i % 3 == 0)
             printf("\n");
-         printf("%s : %xh    ", registersName[i], registers[i]);
+         printTitle(registersName[i]);
+         printf(": %xh    ", registers[i]);
     }
     printf("\n");
 }
@@ -91,8 +92,6 @@ int checkCommand(char * buffer, char * parameter) {
 }
 
 void quadratic() {
-    // aca en realidad debería hacer un scan f para cada coeficiente, por ahora 
-    // los puse fijos para probar
     long double r1, r2;
     char buffs[3][15];
     char abc[3] = {'a', 'b', 'c'}; 
