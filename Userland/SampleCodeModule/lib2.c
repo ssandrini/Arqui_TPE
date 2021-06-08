@@ -219,19 +219,26 @@ int pow(int base, int e)
 
 void doubleToString(long double result, char *auxBuffer)
 {
+    int isNegative = (result < 0) ? 1:0;
     int integer_part = (int)result;
+    
     result = (result - integer_part) * pow(10, 8);
     int decimal_part = (int)result;
-    if (decimal_part < 0)
-        decimal_part = -decimal_part;
-
-    //  int numToStr(int value, char *auxBuffer, int base)
+    
     char aux[40];
-    // aux = 14
+    if (isNegative == 1) {
+        decimal_part = -decimal_part;
+        if(integer_part == 0) {
+            *aux = '-';
+            int len = numToStr(integer_part, aux+1, 10);
+            aux[len+1] = '.';
+            numToStr(decimal_part, aux + len + 2, 10);
+            strcpy(auxBuffer, aux);
+            return;
+        }
+    }
     int len = numToStr(integer_part, aux, 10);
-
     aux[len] = '.';
-
     numToStr(decimal_part, aux + len + 1, 10);
     strcpy(auxBuffer, aux);
 }

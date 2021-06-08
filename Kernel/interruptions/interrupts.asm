@@ -188,7 +188,6 @@ _int80Handler:
 	popState
 	;mov al, 20h
 	;out 20h, al
-	sti
 	iretq
 
 ; en rdi viene el parametro que te permite elegir el dato del RTC
