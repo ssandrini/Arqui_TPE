@@ -2,12 +2,12 @@
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
-#include <naiveConsole.h>
 #include <idtLoader.h>
 #include <exceptions.h>
-
+#include <videoDriver.h>
 #include <keyboard.h>
 #include <sysHandler.h>
+#include <naiveConsole.h>
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
@@ -39,7 +39,6 @@ void * getStackBase()
 
 void * initializeKernelBinary()
 {
-	//char buffer[10];
 
 	void * moduleAddresses[] = {
 		sampleCodeModuleAddress,
@@ -55,58 +54,15 @@ void * initializeKernelBinary()
 int main()
 {	
 	load_idt();
-	setAddresses((uint64_t *)sampleCodeModuleAddress, _getRSP());
-	ncClear(0);
-	ncClear(1);
-	//int a = 1/0;
-	drawLine();
-	((EntryPoint)sampleCodeModuleAddress)();
+	setAddresses((uint64_t *)sampleCodeModuleAddress, _getRSP()); // exceptions
+	drawLine(300);
+	setSegmentBlank(0, 1024, 300, 301, 0x000000);
+	drawLine(450);
+	// ncClear(0); 
+	// ncClear(1); 
+	middleLine(); 
 
-	/*
-	while (1)
-	{
-		if(getBufferSize() == 10) {
-			ncPrint(getBuffer(),0);
-			removeBuffer();
-		}
-	}
-	*/
-
-	// int fecha[3];
-	// int hora[3];
-	// sysHandler((uint64_t) 2, (uint64_t) fecha, (uint64_t) hora);
-	// ncPrintDec(fecha[0]); //dia
-	// ncPrint(" ",0);
-	// ncPrintDec(fecha[1]); //mes
-	// ncPrint(" ",0);
-	// ncPrintDec(fecha[2]); //año
-	// ncNewline();
-	// ncPrintDec(hora[0]); //segundos
-	// ncPrint(" ",0);
-	// ncPrintDec(hora[1]); //minutos
-	// ncPrint(" ",0);
-	// ncPrintDec(hora[2]); //horas
-
-	// uint64_t registros[15];
-	// sysHandler((uint64_t) 3, (uint64_t) registros, (uint64_t)  73);
-	// ncPrint("hola mundo", 0);
-	// for(int i = 0 ; i < 15; i++){
-	// 	ncPrint(registros[i], 0);
-	// 	ncPrint(" ", 0);
-	// }
-
-	/*
-	uint32_t * dir = 180000;
-	uint32_t vec[8];
-	
-	sysHandler((uint64_t) 4, (uint64_t) dir,(uint64_t) vec);
-
-	for(int i = 0; i<8;i++) {
-		ncPrintHex((uint64_t) (*(dir+i*4)));
-		ncPrint(" ", 0);
-	}
-
-	*/
+	//((EntryPoint)sampleCodeModuleAddress)();
 
 	return 0;
 }

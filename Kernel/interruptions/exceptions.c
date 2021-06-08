@@ -32,12 +32,12 @@ void setAddresses(uint64_t * ip, uint64_t * rsp) {
 
 void invalid_operation(){
 	ncPrint("Invalid code of operation", 0);
-	ncNewline();
+	ncNewLine();
 }
 
 void zero_division() {
 	ncPrint("Zero division error ",0);
-	ncNewline();
+	ncNewLine();
 }
 
 void registerPrint(uint64_t * stackFrame) {
@@ -49,7 +49,7 @@ void registerPrint(uint64_t * stackFrame) {
 		intToHexaStr(buffer);
 		ncPrint(buffer,0);
 		if (i> 0 && i % 3 == 0) {
-			ncNewline();
+			ncNewLine();
 		} else {
 			ncPrint("  ",0);
 		}
@@ -68,27 +68,15 @@ void registerPrint(uint64_t * stackFrame) {
 		_hlt();
 		aux = 10 - (seconds_elapsed() - init_time);
 		if (i != aux) {
-			ncPrintChar(-10,0xD);
+			char bspace = B_SPACE;
+			ncPrint(&bspace,0);
 			if (i == 10) {
-				ncPrintChar(-10,0xD);
+				ncPrint(&bspace,0);
 			}
 			i = aux;
 			uintToBase(i, buff, 10);
 			ncPrint(buff, 0);
 		}
 	}
-	ncNewline();
+	ncNewLine();
 }
-
-/*
-uint64_t registers[15];
-    static const char *registersName[] = {"RAX", "RBX", "RCX", "RDX", "RBP", "RDI", "RSI", "R8 ", "R9 ", "R10", "R11", "R12", "R13", "R14", "R15"};
-    //NOS FALTAN "RIP" "CS" "FLAGS" "RSP"
-    _getReg((uint64_t) registers);
-    for(int i = 0, j=14; i < 15; i++, j--) {
-         if( i > 0 && i % 3 == 0)
-            printf("\n");
-         printf("%s : %xh    ", registersName[i], registers[j]);
-    }
-    printf("\n");
-	*/

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define B_SPACE -10
+
 void exceptionDispatcher(uint64_t exception, uint64_t * stackFrame);
 void zero_division();
 void invalid_operation();

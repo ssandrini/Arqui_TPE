@@ -1,153 +1,115 @@
 #include <naiveConsole.h>
 
+#define S1_START 0
+#define S1_END 382
+#define S2_START 385
+#define S2_END HEIGHT
+#define SCREEN_HEIGHT 382                // (HEIGHT / 2) - LINE_HEIGHT
+#define LINE_START S1_END + 1
+#define LINE_HEIGHT 4
+
 #define STD_OUT 0
 #define STD_ERR 1
-#define STD_COLOR 0xD
-#define ERR_COLOR 0x47
-#define WIDTH 80
-#define HEIGHT 25 
+#define STD_COLOR 0xFFFFFF
+#define ERR_COLOR 0xFF0000
+#define B_SPACE -10
+
+static int currX[2] = {0,0};
+static int currY[2] = {S1_START, S2_START};
 
 /*
-v1 _ _ _ _ _
- _ _ _ _ _ _
-------------
-v2 _ _ _ _ _
- _ _ _ _ _ _
+
+1abcdooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooz
+x----------------------------- 
+2ooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooo
+oooooooooooooooooooooooooooooo
 
 */
-// static char buffer[64] = {'0'};
-uint8_t * video1 = (uint8_t*)0xB8000;
-uint8_t * video2 = (uint8_t*) (0xB8000 + WIDTH * 2 * (HEIGHT/2 +1));
-uint8_t * currentVideo1 = (uint8_t*)0xB8000;
-uint8_t * currentVideo2 = (uint8_t*) (0xB8000 + WIDTH *2* (HEIGHT/2 + 1));
-
-int currentScreen = 0;
+int cS = 0;
 
 void changeScreen(int screen) {
-	currentScreen = screen;
+	cS = screen;
 }
 
-void drawLine() {
-	uint8_t * l = video2 - WIDTH * 2;
-	for(int i = 0; i < WIDTH; i++) {
-		l[i * 2] = '-';
-	}
+void middleLine() {
+	for (int i = 0; i < LINE_HEIGHT; i++) {
+        drawLine(LINE_START + i);
+    }
 }
 
 void ncPrint(const char * string, int fd)
 {
-	int color = STD_COLOR;
-	if(fd == STD_ERR)
-		color = ERR_COLOR;
-	for (int i = 0; string[i] != 0; i++)
-		ncPrintChar(string[i], color);
+	int letter_color = (fd == 1)? STD_COLOR : ERR_COLOR ;
+    
+    for (int i = 0; string[i] != 0; i++) {
+		
+        if (string[i] == '\n') {
+            ncNewLine();
+        } else if (string[i] == B_SPACE) {
+			
+			writeLetter(string[i], currX[cS] - LETTER_WIDTH, currY[cS], letter_color);
+			currX[cS] -= LETTER_WIDTH;
+        } else {
+            writeLetter(string[i], currX[cS], currY[cS], letter_color);
+			currX[cS] += LETTER_WIDTH;
+        }
+		
+		if(currX[cS] == WIDTH) {
+			currX[cS] = 0;
+			currY[cS] += LETTER_HEIGHT;
+			int end = (cS == 0) ? S1_END : S2_END;
+			if( currY[cS] == end ) {
+				scroll();
+				currY[cS] -= LETTER_HEIGHT;
+			}
+		}
+		
+    }
 }
 
-void ncPrintChar(char character, int color)
+void ncNewLine()
 {
-	if(currentScreen == 0) {
-		if(character == '\n')
-			ncNewline();
-		else if(character == -10){ // BACKSPACE (BORRAR)
-			currentVideo1 -= 2;
-			*currentVideo1 = ' ';
-			*(currentVideo1 + 1) = color;
-		}
-		else { // CUALQUIER CARACTER
-			*currentVideo1 = character;
-			*(currentVideo1 + 1) = color;
-			currentVideo1 += 2;
-		}
-		if(currentVideo1 ==  video2 - WIDTH * 2) {
-		    scroll();
-		}
-	}
-	else{
-		if(character == '\n')
-			ncNewline();
-		else if(character == -10){
-			currentVideo2 -= 2;
-			*currentVideo2 = ' ';
-			*(currentVideo2 + 1) = color;
-		}
-		else {
-			*currentVideo2 = character;
-			*(currentVideo2 + 1) = color;
-			currentVideo2 += 2;
-		}
-		if(currentVideo2 ==  video2 + WIDTH * (HEIGHT - 1)) {
-		    scroll();
-		}
-	}
+	do 
+	{
+		writeLetter(' ', currX[cS], currY[cS], STD_COLOR);
+		currX[cS] += LETTER_WIDTH;
+	} while(currX[cS] == WIDTH );
 	
-}
-
-void clearLine(uint8_t * p) {
-	for(int i = 0; i < WIDTH; i++) {
-		p[i * 2] = ' ';
+	currX[cS] = 0;
+	currY[cS] += LETTER_HEIGHT;
+	int end = (cS == 0) ? S1_END : S2_END;
+	if( currY[cS] == end ) {
+		scroll();
+		currY[cS] -= LETTER_HEIGHT;
 	}
 }
 
-
-void ncNewline()
+void scroll() 
 {
-	if(currentScreen == 0) {
-		do
-		{
-			ncPrintChar(' ', STD_OUT);
-		}
-		while((uint64_t)(currentVideo1 - video1) % (WIDTH*2) != 0);
-	}
-	else {
-		do
-		{
-			ncPrintChar(' ', STD_OUT);
-		}
-		while((uint64_t)(currentVideo2 - video2) % (WIDTH*2) != 0);
-	}
+	int start = (cS == 0) ? S1_START : S2_START;
+	int end = (cS == 0) ? S1_END : S2_END;
+
+	for (int y = start; y < end - LETTER_HEIGHT; y++) {
+        for (int x = 0; x < WIDTH; x++) {
+            int color = getPixelColor(x, y);
+            writePixel(x, y, getPixelColor(x, y + LETTER_HEIGHT));
+            writePixel(x, y + LETTER_HEIGHT, color);
+        }
+    }
+	clearLine(end);
 }
 
-void ncClear(int currentScreen)
+void ncClear(int cS)
 {	
-	if(currentScreen == 0) {
-		for (int i = 0; i < HEIGHT* (WIDTH/2 - 2); i++)
-			video1[i * 2] = ' ';
-		currentVideo1 = video1;
-	}
-	else {
-		for (int i = 0; i < HEIGHT* (WIDTH/2 - 2); i++)
-			video2[i * 2] = ' ';
-		currentVideo2 = video2;
-	}
-}
+	int start = (cS == 0) ? S1_START : S2_START;
+	int end = (cS == 0) ? S1_END : S2_END;
 
-void scroll() {
-	
-	if(currentScreen == 0) {
-		currentVideo1 = video1; //// lo llevo al principio
-		uint8_t * aux = video1 + WIDTH * 2; // el aux apunta al principio de la sig linea
-		while( aux < video2 - WIDTH * 2 ) { // copio en la linea de arriba 
-			ncPrintChar(*aux, STD_COLOR);
-			aux+=2;
-		}
-		aux -= WIDTH * 2;
-		currentVideo1 = aux;
-		clearLine(currentVideo1);
-	}
-
-
-
-	else{
-		currentVideo2 = video2;
-		uint8_t * aux = video2 + WIDTH * 2;
-		while( aux < video2 + WIDTH * (HEIGHT-1)) {
-			ncPrintChar(*aux, STD_COLOR);
-			aux+=2;
-		}
-		aux -= WIDTH * 2;
-		currentVideo2 = aux;
-		clearLine(currentVideo2);
-	}
+	for (int y = start; y < end ; y++) {
+        clearLine(start);
+    }
 }
 
 // provisto por la catedra
@@ -198,3 +160,4 @@ void intToHexaStr(char * buff) {
 		buff[k] = auxStr[k];
 	}
 }
+
