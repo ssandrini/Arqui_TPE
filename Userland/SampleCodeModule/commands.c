@@ -26,7 +26,7 @@ void getTime() {
 
 void inforeg() {
     uint64_t registers[19];
-    static const char *registersName[] = { "R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
+    static char *registersName[] = { "R15    ", "R14    ", "R13    ", "R12    ", "R11    ", "R10    ", "R9     ", "R8     ", "RSI    ", "RDI    ", "RBP    ", "RDX    ", "RCX    ", "RBX    ", "RAX    ", "RIP    ", "CS     ", "FLAGS  ", "RSP    "};
     _getReg((uint64_t) registers);
     for(int i = 0; i < 19; i++) {
          if( i > 0 && i % 3 == 0)
@@ -44,7 +44,7 @@ void getMem(char * param) {
     }
     uint32_t vec[8];
     _getMem(dir, vec);
-    printf("mem: \n");
+    printTitle("mem: \n");
     for(int i = 0; i<8;i++) {
         if( i > 0 && i % 4 == 0) 
             printf("\n");
@@ -101,7 +101,7 @@ void quadratic() {
         printf("%c = ",abc[i]);
         int length = readNumFromLine(buffs[i]);
         if(length <= -1) {
-            printf("\nValor incorrecto. Debe ser un numero.\n");
+            printf("Valor incorrecto. Debe ser un numero.\n");
             return;
         }
         stringToDouble(buffs[i], &abcNum[i]);
@@ -134,24 +134,24 @@ void cpuid() {
     uint32_t r1; 
     uint32_t r2;
                                                              
-    uint32_t masks1[8]= {     0x1,             0x2,             0x1000,        0x80000,        0x100000,       0x2000000,      0x10000000,     0x20000000};
-    char namesr1[8][20] = { "sse3_support", "pclmulqdq_support", "fma_support", "sse41_support", "sse42_support", "aesni_support", "avx_support", "f16c_support"};
-//              bit =        0                   1                 12              19               20              25              28              29
+    uint32_t masks1[8]= {     0x1,    0x2,      0x1000, 0x80000, 0x100000,0x2000000, 0x10000000,0x20000000};
+    char namesr1[8][20] = { "sse3", "pclmulqdq", "fma", "sse41", "sse42", "aesni",    "avx"    , "f16c"};
+//              bit =        0       1            12      19       20       25        28           29
 
 
-    uint32_t masks2[3] = {  0x800000,       0x2000000,       0x4000000};
-    char namesr2[3][20] = {"mx_support", "sse_support", "sse2_support"};
-//              bit =       23              25          26
+    uint32_t masks2[3] = {  0x800000,0x2000000, 0x4000000};
+    char namesr2[3][20] = {"mx",      "sse"   , "sse2"};
+//              bit =       23         25          26
 
 
-    uint32_t sMasks1[2] = {   0x200     ,        0x400        };
-    char snamesr1[2][20] = {"vaesni_support", "vpclmulqdq_support"};
-//              bit =           9                  10
+    uint32_t sMasks1[2] = {   0x200 , 0x400        };
+    char snamesr1[2][20] = {"vaesni", "vpclmulqdq"};
+//              bit =           9         10
 
 
     uint32_t sMasks2 =   0x20;
-    char snamesr2[13]  = "avx2_support"; 
-//              bit =        5
+    char snamesr2[13]  = "avx2"; 
+//              bit =      5
 
 
     int ok = FEATURES_ID;
@@ -159,11 +159,13 @@ void cpuid() {
 
     _getCpuInfo(&r1, &r2, &ok); 
     //r1 = -r1;
+    printf("Su procesador soporta los siguientes features: \n");
+    printTitle("cpuid");
     if(ok) {
-        printf("cpuid_support : 1 \n");
+        printf(" : 1 \n");
     }
     else {
-        printf("cpuid_support : 0 \n");
+        printf(" : 0 \n");
         return;
     }
 
@@ -174,7 +176,8 @@ void cpuid() {
         aux = r1 & masks1[i];
         if(aux != 0  )
             aux = 1;
-        printf("%s : %d  ", namesr1[i], aux);
+        printTitle(namesr1[i]);
+        printf(" : %d  ", aux);
     }
     
     for(int i = 0; i < 3; i++){
@@ -183,7 +186,8 @@ void cpuid() {
         aux = r2 & masks2[i];
         if(aux != 0  )
             aux = 1;
-        printf("%s : %d  ", namesr2[i], aux);
+        printTitle(namesr2[i]);
+        printf(" : %d  ", aux);
     }
     
     printf("\n");   
@@ -198,13 +202,15 @@ void cpuid() {
             aux = 1;
         if( i == 1 )
             printf("\n");
-        printf("%s : %d  ", snamesr1[i], aux);
+        printTitle(snamesr1[i]);
+        printf(" : %d  ", aux);
     }
     printf("\n");
 
     aux = r2 & sMasks2;
     if( aux != 0 )
         aux = 1;
-    printf("%s : %d \n", snamesr2 , aux); 
-    
+        printTitle(snamesr2);
+    printf(" : %d \n", aux); 
+    printf("Con 1 se indica que lo soporta y con 0 que no lo soporta\n");
 }

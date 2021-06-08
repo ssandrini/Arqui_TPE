@@ -336,5 +336,5 @@ void printError(char * err) {
 }
 
 void printTitle(char * title) {
-    _write(title, 0x008F39);
+    _write(title, 0x8791D4);
 }
