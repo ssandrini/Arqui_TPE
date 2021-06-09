@@ -1,6 +1,6 @@
 #include <stdfun.h>
 
-#define BSIZE 50
+#define BSIZE 10
 #define BSPACE -10
 
 char auxBuffer[BSIZE] = {0};
@@ -240,9 +240,29 @@ void doubleToString(long double result, char *auxBuffer)
 {
     int isNegative = (result < 0) ? 1 : 0;
     int integer_part = (int)result;
+    int i;
+    /*
+    r = 0.00014
+    1 paso : 0.0014 
+    2 paso : 0.014
+    4 paso : 1.4
+    for()
+        aux[i] = '0';
+    aux+i
+    pDEcimal = (r - pEntera) * 10^8
 
-    result = (result - integer_part) * pow(10, 8);
-    int decimal_part = (int)result;
+*/
+    result = (result - integer_part); 
+    for(i=0; (int) result == 0 && i <= 8; i++){
+        result *= 10;
+        //0.0014 i=1
+        //0.014 i=2
+        //0.14 i=3
+        //1.4 i=4
+    }
+    i--;
+    result *= pow(10,8-i);
+    int decimal_part = (int)result; 
 
     char aux[40];
     if (isNegative == 1)
@@ -252,14 +272,20 @@ void doubleToString(long double result, char *auxBuffer)
         {
             *aux = '-';
             int len = numToStr(integer_part, aux + 1, 10);
-            aux[len + 1] = '.';
-            numToStr(decimal_part, aux + len + 2, 10);
+            aux[++len] = '.';
+            for(int j = 0; j < i; j++){
+                aux[++len] = '0';
+            }
+            numToStr(decimal_part, aux + len + 1, 10);
             strcpy(auxBuffer, aux);
             return;
         }
     }
     int len = numToStr(integer_part, aux, 10);
     aux[len] = '.';
+    for(int j = 0; j < i; j++){
+        aux[++len] = '0';
+    }
     numToStr(decimal_part, aux + len + 1, 10);
     strcpy(auxBuffer, aux);
 }
@@ -276,7 +302,7 @@ int readNumFromLine(char *dest)
         if (c == BSPACE)
         {
             if (currentIdx > 0)
-            {
+            {   
                 currentIdx--;
                 putChar(BSPACE);
                 errorFlag = 0;

@@ -151,8 +151,10 @@ void quadratic()
         doubleToString(r1, root1);
         doubleToString(r2, root2);
 
-        printf("root1 = %s \n", root1);
-        printf("root2 = %s \n", root2);
+        printTitle("root1");
+        printf(" = %s \n", root1);
+        printTitle("root2");
+        printf(" = %s \n", root2);
     }
 }
 
