@@ -93,7 +93,7 @@ int checkCommand(char * buffer, char * parameter) {
     return -1;
 }
 
-oid quadratic() {
+void quadratic() {
     long double r1, r2;
     char buffs[3][15];
     char abc[3] = {'a', 'b', 'c'}; 
