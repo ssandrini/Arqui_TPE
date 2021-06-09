@@ -18,7 +18,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t r3, uint6
             getReg((uint64_t *) r1, (uint64_t *) rsp);
             break;
         case 4: // sysGetMem
-            getMem((uint32_t * ) r1,(uint32_t * ) r2);
+            getMem((uint8_t * ) r1,(uint8_t * ) r2);
             break;
         case 5: // sysChangeScreen
             changeScreen((int) r1);
@@ -30,7 +30,6 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t r3, uint6
             getInfo((uint32_t *) r1, (uint32_t *) r2, (int *) r3) ;
             break;
         default: 
-            //potncial print error
             break;
     }
 }
@@ -45,7 +44,8 @@ void read(unsigned char * r1, unsigned int r2) {
     removeBuffer();  
 }
 
-// EN R1 VIENE DATE, EN R2 VIENE HOUR
+// la manipulacion del formato la sacamos de la fuente que nos dio la catedra:
+// https://wiki.osdev.org/CMOS#Format_of_Bytes
 void getTimeRTC(uint64_t r1, uint64_t r2) {
     int * buffer1 = (int *) r1;
     int * buffer2 = (int *) r2;
@@ -56,7 +56,6 @@ void getTimeRTC(uint64_t r1, uint64_t r2) {
     buffer2[1] = _RTC(2); //minuto
     buffer2[2] = _RTC(0); //segundo
 
-    // ACLARAR QUE ESTO LO SACAMOS DE INTERNET  https://wiki.osdev.org/CMOS#Format_of_Bytes
     buffer2[2] = (buffer2[2] & 0x0F) + ((buffer2[2] / 16) * 10);
     buffer2[1] = (buffer2[1] & 0x0F) + ((buffer2[1] / 16) * 10);
     buffer2[0] = ((buffer2[0] & 0x0F) + (((buffer2[0] & 0x70) / 16) * 10) ) | (buffer2[0] & 0x80);
@@ -66,16 +65,14 @@ void getTimeRTC(uint64_t r1, uint64_t r2) {
 }
 
 void getReg(uint64_t * registers, uint64_t * stackFrame){
-    //_getRegisters(registers); // Despues ver si conviene hacerla en C 
     for(int i = 0; i < 19; i++) {
         registers[i] = stackFrame[i];
     }
 }
 
-void getMem(uint32_t * dir, uint32_t * vec) {
-    // falta chequear los rangos accesibles 
-    for(int i = 0; i < 8; i++){
-        vec[i] = *(dir + i*4);
+void getMem(uint8_t * dir, uint8_t * vec) {
+    for(int i = 0; i < 32; i++){
+        vec[i] = dir[i];
     }
 }
 

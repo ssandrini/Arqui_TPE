@@ -34,7 +34,7 @@ _getReg:
     int 80h
     ret
 
-; void _getMem(uint32_t * dir, uint32_t * memory);
+; void _getMem(uint8_t * dir, uint8_t * memory);
 _getMem:
     mov rax, 4   
     int 80h

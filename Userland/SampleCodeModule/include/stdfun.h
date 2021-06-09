@@ -15,7 +15,7 @@ char *reverse(char *buffer, int i, int j);
 void swap(char *x, char *y);
 int strcmp(char * s1, char *s2);
 int strToInt(char *str);
-uint32_t * hexaStrToDir(char * hexaStr);
+int hexaStrToDir(char * hexaStr);
 int pow(int base, int e);
 void doubleToString(long double result, char * root);
 int readNumFromLine(char * dest);
@@ -24,5 +24,6 @@ int strcpyTilPoint(char *destination, const char *source);
 void printUser(char * name);
 void printError(char * err);
 void printTitle(char * title);
+uint32_t uintToString(uint64_t value, char * buffer, uint32_t base);
 
 #endif

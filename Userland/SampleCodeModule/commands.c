@@ -49,15 +49,17 @@ void inforeg()
 
 void getMem(char *param)
 {
-    uint32_t *dir = hexaStrToDir(param);
-    uint32_t vec[8];
+    int dir_aux = hexaStrToDir(param);
+    // uint32_t * dir = hexaStrToDir(param);
+    uint8_t * dir = (uint8_t *) dir_aux;
+    uint8_t vec[32]; // 32 "registros" de 1 byte 
     _getMem(dir, vec);
-    printTitle("mem: \n");
-    for (int i = 0; i < 8; i++)
+    printTitle("Volcado de memoria byte a byte a partir de la direccion solicitada: \n");
+    for (int i = 0; i < 32; i++)
     {
-        if (i > 0 && i % 4 == 0)
+        if (i > 0 && i % 16 == 0)
             printf("\n");
-        printf("%xh    ", vec[i]);
+        printf("%Xh  ", vec[i]);
     }
     printf("\n");
 }
@@ -87,10 +89,15 @@ int checkCommand(char *buffer, char *parameter)
             aux[j] = 0;
             if (strcmp(aux, commandsNames[i]) == 0 && buffer[LENGTH_PRINTMEM] == ' ')
             {
+                int len = strlen(buffer);
+                if(len == LENGTH_PRINTMEM + 1) {
+                    printError("Indique la direccion como parametro de la forma printmem DIR (hexa) \n");
+                    return -1;
+                }
                 j = LENGTH_PRINTMEM + 1;
                 while (buffer[j] != 0)
                 {
-                    if ((buffer[j] >= '0' && buffer[j] <= '9') || (buffer[j] >= 'A' && buffer[j] <= 'Z'))
+                    if ((buffer[j] >= '0' && buffer[j] <= '9') || (buffer[j] >= 'A' && buffer[j] <= 'F'))
                     {
                         *parameter++ = buffer[j++];
                     }
@@ -98,7 +105,6 @@ int checkCommand(char *buffer, char *parameter)
                         return -1;
                 }
                 *parameter = 0;
-
                 return i;
             }
         }

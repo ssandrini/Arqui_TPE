@@ -108,38 +108,54 @@ void printf(char *str, ...)
             i++;
             switch (str[i])
             {
-            case 'c':
-            {
-                buff[j] = (char)va_arg(args, int);
-                j++;
-                break;
-            }
-            case 'd':
-            {
-                numToStr(va_arg(args, int), tmp, 10); //base 10
-                strcpy(&buff[j], tmp);
-                j += strlen(tmp);
-                break;
-            }
-            case 's':
-            {
-                str_arg = (char *)va_arg(args, char *);
-                strcpy(&buff[j], str_arg);
-                j += strlen(str_arg);
-                break;
-            }
-            case 'x':
-            {
-                h = numToStr(va_arg(args, int), tmp, 16); //base 16
-                for (forindex = 0; forindex < 8 - h; forindex++)
+                case 'c':
                 {
-                    tmp2[forindex] = '0';
+                    buff[j] = (char)va_arg(args, int);
+                    j++;
+                    break;
                 }
-                strcpy(&tmp2[forindex], tmp);
-                strcpy(&buff[j], tmp2);
-                j += strlen(tmp2);
-                break;
-            }
+                case 'd':
+                {
+                    numToStr(va_arg(args, int), tmp, 10); //base 10
+                    strcpy(&buff[j], tmp);
+                    j += strlen(tmp);
+                    break;
+                }
+                case 's':
+                {
+                    str_arg = (char *)va_arg(args, char *);
+                    strcpy(&buff[j], str_arg);
+                    j += strlen(str_arg);
+                    break;
+                }
+                case 'x': // imprime en hexa pero con 8 digitos
+                {
+                    h = uintToString(va_arg(args, unsigned int), tmp, 16); //base 16
+                    for (forindex = 0; forindex < 8 - h; forindex++)
+                    {
+                        tmp2[forindex] = '0';
+                    }
+                    strcpy(&tmp2[forindex], tmp);
+                    strcpy(&buff[j], tmp2);
+                    j += strlen(tmp2);
+                    
+                    break;
+                }
+                case 'X': // imprime en hexa pero solo con 2 digitos
+                {
+                    h = uintToString(va_arg(args, unsigned int), tmp, 16); //base 16
+                    // aca me sale una string de len = 1 o 2
+                    if( h == 1 ) {
+                        tmp2[0] = '0';
+                        tmp2[1] = tmp[0];
+                        strcpy(&buff[j], tmp2);
+                    }
+                    else 
+                        strcpy(&buff[j], tmp);
+
+                    j += 2;
+                    break;
+                }
             }
         }
         else
@@ -191,10 +207,10 @@ int strToInt(char *str)
 
 
 // los caracteres ya tienen que ser validos cuando se llama a esta funcion
-uint32_t *hexaStrToDir(char *hexaStr)
+int hexaStrToDir(char *hexaStr)
 { 
     int len = strlen(hexaStr);
-    uint32_t *ans = 0;
+    int ans = 0;
     int j = 0;
     for (int i = len - 1; i >= 0; i--, j++)
     {
@@ -204,7 +220,7 @@ uint32_t *hexaStrToDir(char *hexaStr)
         }
         else if (hexaStr[i] <= 'F' && hexaStr[i] >= 'A')
         {
-            ans += (hexaStr[i] - 'A') * pow(16, j);
+            ans += (hexaStr[i] - 'A' + 10) * pow(16, j);
         }
     }
     return ans;
@@ -348,4 +364,37 @@ void printError(char *err)
 void printTitle(char *title)
 {
     _write(title, 0x8791D4);
+}
+
+uint32_t uintToString(uint64_t value, char * buffer, uint32_t base)
+{
+	char *p = buffer;
+	char *p1, *p2;
+	uint32_t digits = 0;
+
+	//Calculate characters for each digit
+	do
+	{
+		uint32_t remainder = value % base;
+		*p++ = (remainder < 10) ? remainder + '0' : remainder + 'A' - 10;
+		digits++;
+	}
+	while (value /= base);
+
+	// Terminate string in buffer.
+	*p = 0;
+
+	//Reverse string in buffer.
+	p1 = buffer;
+	p2 = p - 1;
+	while (p1 < p2)
+	{
+		char tmp = *p1;
+		*p1 = *p2;
+		*p2 = tmp;
+		p1++;
+		p2--;
+	}
+
+	return digits;
 }
