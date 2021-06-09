@@ -93,7 +93,7 @@ int checkCommand(char * buffer, char * parameter) {
     return -1;
 }
 
-void quadratic() {
+oid quadratic() {
     long double r1, r2;
     char buffs[3][15];
     char abc[3] = {'a', 'b', 'c'}; 
@@ -103,14 +103,14 @@ void quadratic() {
         printf("%c = ",abc[i]);
         int length = readNumFromLine(buffs[i]);
         if(length <= -1) {
-            printf("Valor incorrecto. Debe ser un numero.\n");
+            printf("\nValor incorrecto. Debe ser un numero.\n");
             return;
         }
         stringToDouble(buffs[i], &abcNum[i]);
     }
 
     if (abcNum[0] >= 0 - EPSILON && abcNum[0] <= 0 + EPSILON){
-        printf("\nValor incorrecto. a debe ser distinto de 0 \n");
+        printf("Valor incorrecto. a debe ser distinto de 0 \n");
         return;
     } 
     int aux = _quadratic(&abcNum[0],&abcNum[1],&abcNum[2], &r1,&r2);
@@ -125,8 +125,6 @@ void quadratic() {
         printf("root1 = %s \n", root1);
         printf("root2 = %s \n", root2);
     }
-    
-    
 }
 
 void cpuid() {
