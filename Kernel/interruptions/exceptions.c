@@ -64,6 +64,7 @@ void registerPrint(uint64_t * stackFrame) {
 	int i = 10;
 	uintToBase(i, buff, 10);
 	ncPrint(buff,0xFF0000);
+	deleteCursor();
 	while (i > 0) {
 		_hlt();
 		aux = 10 - (seconds_elapsed() - init_time);
@@ -76,6 +77,7 @@ void registerPrint(uint64_t * stackFrame) {
 			i = aux;
 			uintToBase(i, buff, 10);
 			ncPrint(buff, 0xFF0000);
+			deleteCursor();
 		}
 	}
 	ncNewLine();

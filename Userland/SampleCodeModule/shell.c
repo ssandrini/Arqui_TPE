@@ -122,4 +122,5 @@ void requestUser(){
     }
     clear(cB);
     printf("Bienvenido %s, si quiere cambiar a la otra terminal presione TAB\n", user[cB]);
+    printf("Puedes escribir el comando help para ver los diferentes comandos del sistema\n");
 }

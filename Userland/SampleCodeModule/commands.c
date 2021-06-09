@@ -3,8 +3,8 @@
 char commandsNames[9][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic","clear"};
 char info[8][150] = {"inforeg: imprime en pantalla el valor de todos los registros \n",
 "printmem DIR : realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
-"time: desplega el dia y la hora del sistema\n", "trigger0: demuestra el error de division por cero\n", 
-"trigger6: demuestra el error de operacion invalida\n", "quadratic: obtiene las raices de la funcion quadratica deseada\n",
+"time: desplega el dia y la hora del sistema\n", "trigger0: demuestra la excepcion de division por cero\n", 
+"trigger6: demuestra la excepcion de operacion invalida\n", "quadratic: obtiene las raices de la funcion quadratica deseada\n",
 "cpuid: despliega los features especiales del procesador\n", "clear: borra toda la pantalla\n"};
 
 void help() {

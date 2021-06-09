@@ -19,7 +19,7 @@ static int currY[2] = {S1_START, S2_START};
 int cS = 0;
 
 void changeScreen(int screen) {
-	writeLetter(' ', currX[cS], currY[cS], 0); // borra el cursor
+	deleteCursor();
 	cS = screen;
 	printCursor();
 }
@@ -165,4 +165,8 @@ void printCursor() {
 			writePixel(i,j,0xFFFFFF);
 		}
 	}
+}
+
+void deleteCursor() {
+	writeLetter(' ', currX[cS], currY[cS], 0); // borra el cursor
 }
