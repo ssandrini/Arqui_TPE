@@ -1,4 +1,5 @@
 #include <videoDriver.h>
+#include <font8x16.h>
 
 struct infoStructure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
@@ -42,7 +43,7 @@ struct infoStructure * screenInfo = (struct infoStructure *)0x5C00;
 
 // retorna el puntero de posicion correspondiente de la pantalla
 char * getDataPosition(int x, int y) {
-	return screenInfo->framebuffer + (x + WIDTH * y) * 3;
+	return (char *) screenInfo->framebuffer + (x + WIDTH * y) * 3;
 }
 
 // retorna si dicho pixel esta en negro

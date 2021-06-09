@@ -49,9 +49,9 @@ void inforeg()
 
 void getMem(char *param)
 {
-    int dir_aux = hexaStrToDir(param);
+    uint8_t * dir = (uint8_t * ) hexaStrToDir(param);
     // uint32_t * dir = hexaStrToDir(param);
-    uint8_t * dir = (uint8_t *) dir_aux;
+   // uint8_t * dir = (uint8_t * )dir_aux;
     uint8_t vec[32]; // 32 "registros" de 1 byte 
     _getMem(dir, vec);
     printTitle("Volcado de memoria byte a byte a partir de la direccion solicitada: \n");
@@ -67,6 +67,7 @@ void getMem(char *param)
 void exc0Trigger()
 {
     int a = 5 / 0;
+    printf("%d \n", a);
 }
 
 void exc6Trigger()

@@ -207,10 +207,10 @@ int strToInt(char *str)
 
 
 // los caracteres ya tienen que ser validos cuando se llama a esta funcion
-int hexaStrToDir(char *hexaStr)
+uint64_t hexaStrToDir(char *hexaStr)
 { 
     int len = strlen(hexaStr);
-    int ans = 0;
+    uint64_t ans = 0;
     int j = 0;
     for (int i = len - 1; i >= 0; i--, j++)
     {
