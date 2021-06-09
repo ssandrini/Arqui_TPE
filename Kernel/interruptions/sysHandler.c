@@ -6,6 +6,7 @@ void sysHandler(uint64_t sysNumber, uint64_t r1, uint64_t r2, uint64_t r3, uint6
     { 
         case 0: // sysRead  r1=buffer r2=10
             read((unsigned char *)r1, (unsigned int)r2);
+            _hlt();
             break;
         case 1: // sysWrite 
             ncPrint((const char *) r1, (int) r2); //en r1 iria un string y en r2 el color

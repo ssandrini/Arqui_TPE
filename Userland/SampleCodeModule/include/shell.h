@@ -2,8 +2,8 @@
 #define __SHELL_H__
 
 #include <commands.h>
-#include <lib2.h>
-void _changeScreen(int cB);
+#include <stdfun.h>
+extern void _changeScreen(int cB);
 void shell();
 void requestUser();
 #endif

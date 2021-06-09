@@ -10,87 +10,83 @@ GLOBAL _exc6Trigger
 GLOBAL _getCpuInfo
 section .text
 
-_write:
-    push rbp
-    mov rbp, rsp
-                    ; en rdi estaria el puntero a la string para imprimir
-                    ; en rsi esta el color
-    mov rax, 1     
-    int 80h         ; llamada a la syscall write 
-
-    mov rsp, rbp
-    pop rbp
+; void _getBuffer(char * buffer, int bytes);                                           
+_getBuffer:
+    mov rax, 0     
+    int 80h
     ret
 
-_getBuffer:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 0     ; llamada a la syscall read
-    int 80h
-    
-    mov rsp, rbp
-    pop rbp
+; void _write(char * string, int color);                                              
+_write:
+    mov rax, 1     
+    int 80h         
     ret
 
 ; void _getTime(int * fecha, int * hora);
 _getTime:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 2   ; llamada a la syscall time
+    mov rax, 2     
     int 80h
-    
-    mov rsp, rbp
-    pop rbp
     ret
 
-; extern void _getReg(uint64_t registers);
+; void _getReg(uint64_t registers);
 _getReg:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 3   ; llamada a la syscall getRegisters
+    mov rax, 3   
     int 80h
-    
-    mov rsp, rbp
-    pop rbp
     ret
 
+; void _getMem(uint32_t * dir, uint32_t * memory);
 _getMem:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 4   ; llamada a la syscall getMemory
+    mov rax, 4   
     int 80h
-    
-    mov rsp, rbp
-    pop rbp
     ret
 
-; en rdi se indica el numero de pantalla
+; void _changeScreen(int cB);
 _changeScreen:
-    push rbp
-    mov rbp, rsp
-
-    mov rax, 5   ; llamada a la syscall changeScreen
+    mov rax, 5   
     int 80h
-    
-    mov rsp, rbp
-    pop rbp
     ret
 
+; void _clearScreen(int cB);
 _clearScreen:
-    push rbp
-    mov rbp, rsp
-                    ; en rdi viene el cB
-    mov rax, 6   ; llamada a la syscall clearScreen
+    mov rax, 6   
     int 80h
-    
-    mov rsp, rbp
-    pop rbp
     ret
 
+;-----------------------------------------------------------------------------------;
+;_getCpuInfo(&rg1, &rg2, &id);                                                      ;    
+; esta syscall devuelve dos datos de 32 bits con las features del procesador.       ;
+; si se indica el flag id=1 devuelve las comunes y                                  ;
+; y si el flag id=7  devuelve las special                                           ;
+; ademas en id se setea en 0 o en 1 si soporta la instruccion cpuid o no.           ;
+;-----------------------------------------------------------------------------------;
+; caso ID = 0                      |                     caso ID = 1                ;
+;-----------------------------------------------------------------------------------;
+; en rg1 tiene cargado:            |                 en rg1 tiene cargado:          ;    
+; sse3_support, (bit0)             |                 vaesni_support (bit9)          ;
+; pclmulqdq_support (bit1)         |                 vpclmulqdq_support (bit10)     ;
+; fma_support (bit12)              |                                                ;
+; sse41_support, (bit19)           |                                                ;
+; sse42_support (bit20)            |                                                ;
+; aesni_support (bit25)            |                                                ;
+; avx_support (bit28)              |                                                ;
+; f16c_support (bit29)             |                                                ;
+;-----------------------------------------------------------------------------------;
+; en rg2 tiene cargado:            |                  en rg2 tiene cargado:         ;
+; mx_support   (bit23)             |                  avx2_support (bit5)           ;
+; sse_support   (bit25)            |                                                ;
+; sse2_support (bit26)             |                                                ;
+;-----------------------------------------------------------------------------------;
+_getCpuInfo:
+    mov rax, 7      
+    int 80h
+    ret
+
+; https://www.felixcloutier.com/x86/ud
+_exc6Trigger:
+	UD2
+	ret
+
+; int _quadratic(long double * a, long double * b, long double * c, long double * r1, long double * r2)
 _quadratic:
     push rbp              ; armado del stackframe
     mov rbp, rsp
@@ -134,46 +130,6 @@ _quadratic:
 
 .no_results:
     mov rax, 0            ; devulevo 0 porque no pude calcular
-    mov rsp, rbp
-    pop rbp
-    ret
-
-; agregar el link de donde lo sacamos (foro horacio)
-_exc6Trigger:
-	UD2
-	ret
-
-;-----------------------------------------------------------------------------------;
-;_getCpuInfo(&rg1, &rg2, &id);                                                      ;    
-; esta syscall devuelve dos datos de 32 bits con las features del procesador.       ;
-; si se indica el flag id=1 devuelve las comunes y                                  ;
-; y si el flag id=7  devuelve las special                                           ;
-; ademas en id se setea en 0 o en 1 si soporta la instruccion cpuid o no.           ;
-;-----------------------------------------------------------------------------------;
-; caso ID = 0                      |                     caso ID = 1                ;
-;-----------------------------------------------------------------------------------;
-; en rg1 tiene cargado:            |                 en rg1 tiene cargado:          ;    
-; sse3_support, (bit0)             |                 vaesni_support (bit9)          ;
-; pclmulqdq_support (bit1)         |                 vpclmulqdq_support (bit10)     ;
-; fma_support (bit12)              |                                                ;
-; sse41_support, (bit19)           |                                                ;
-; sse42_support (bit20)            |                                                ;
-; aesni_support (bit25)            |                                                ;
-; avx_support (bit28)              |                                                ;
-; f16c_support (bit29)             |                                                ;
-;-----------------------------------------------------------------------------------;
-; en rg2 tiene cargado:            |                  en rg2 tiene cargado:         ;
-; mx_support   (bit23)             |                  avx2_support (bit5)           ;
-; sse_support   (bit25)            |                                                ;
-; sse2_support (bit26)             |                                                ;
-;-----------------------------------------------------------------------------------;
-_getCpuInfo:
-    push rbp
-    mov rbp, rsp
-                    
-    mov rax, 7      ; llamada a la syscall cpuInfo
-    int 80h
-    
     mov rsp, rbp
     pop rbp
     ret

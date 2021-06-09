@@ -1,10 +1,10 @@
-#include <lib2.h>
-#include <stdarg.h>
+#include <stdfun.h>
 
 #define BSIZE 50
 #define BSPACE -10
+
 char auxBuffer[BSIZE] = {0};
-int currentIdx=0;
+int currentIdx = 0;
 
 void putChar(const char ascii)
 {
@@ -30,15 +30,14 @@ int strlen(const char *string)
     }
     return i;
 }
-
-//https://www.techiedelight.com/implement-itoa-function-in-c/
+//-------------------------------------------------------------------------------------
+// leves cambios, nos basamos en la implementacion del libro K&R de C y con esta fuente
+// https://www.techiedelight.com/implement-itoa-function-in-c/
 // Iterative function to implement itoa() function in C
 int numToStr(int value, char *auxBuffer, int base)
 {
-    // invalid input
     if (base < 2 || base > 32)
         return -1;
-    // consider absolute value of number
     int n = value;
     if (n < 0)
     {
@@ -55,16 +54,11 @@ int numToStr(int value, char *auxBuffer, int base)
 
         n = n / base;
     }
-    // if number is 0
     if (i == 0)
         auxBuffer[i++] = '0';
-    // If base is 10 and value is negative, the resulting string
-    // is preceded with a minus sign (-)
-    // With any other base, value is always considered unsigned
     if (value < 0 && base == 10)
         auxBuffer[i++] = '-';
-    auxBuffer[i] = '\0'; // null terminate string
-    // reverse the string and return it
+    auxBuffer[i] = '\0'; 
     reverse(auxBuffer, 0, i - 1);
     return i;
 }
@@ -83,6 +77,8 @@ void swap(char *x, char *y)
     *y = t;
 }
 
+//-------------------------------------------------------------------------------------
+
 void strcpy(char *destination, const char *source)
 {
     while (*source != '\0')
@@ -95,6 +91,8 @@ void strcpy(char *destination, const char *source)
     return;
 }
 
+// nos basamos en este codigo aunque hicimos varias modificaciones
+// https://opensource.apple.com/source/xnu/xnu-201/osfmk/kern/printf.c.auto.html
 void printf(char *str, ...)
 {
     va_list args;
@@ -151,7 +149,7 @@ void printf(char *str, ...)
         }
         i++;
     }
-    _write(buff,0xFFFFFF);
+    _write(buff, 0xFFFFFF);
     va_end(args);
 }
 
@@ -161,20 +159,22 @@ int strcmp(char *s1, char *s2)
     while (s1[i] == s2[i])
     {
         if (s1[i] == '\0' && s2[i] == '\0')
-            return 0; //si llego hasta aca es porque son exactamente iguales
+            return 0; 
         i++;
     }
-    return s1[i] - s2[i]; //si llego aca es que son distintos
+    return s1[i] - s2[i]; 
 }
 
+//----------------------------------------------------------------------
+// con algunas modificaciones pero nos basamos en la fuente indicada:
 //https://www.geeksforgeeks.org/write-your-own-atoi/
 int strToInt(char *str)
 {
     int len = strlen(str);
     int ans = 0;
     int j = 0;
-    int minusFlag = 0 ;
-    if(str[0] == '-')
+    int minusFlag = 0;
+    if (str[0] == '-')
         minusFlag = 1;
     for (int i = len - 1; i >= 0; i--, j++)
     {
@@ -183,13 +183,16 @@ int strToInt(char *str)
             ans += (str[i] - '0') * pow(10, j);
         }
     }
-    if(minusFlag)
+    if (minusFlag)
         ans = -ans;
     return ans;
 }
+//-------------------------------------------------------------------------------
 
+
+// los caracteres ya tienen que ser validos cuando se llama a esta funcion
 uint32_t *hexaStrToDir(char *hexaStr)
-{ // los caracteres ya tienen que ser validos
+{ 
     int len = strlen(hexaStr);
     uint32_t *ans = 0;
     int j = 0;
@@ -219,19 +222,21 @@ int pow(int base, int e)
 
 void doubleToString(long double result, char *auxBuffer)
 {
-    int isNegative = (result < 0) ? 1:0;
+    int isNegative = (result < 0) ? 1 : 0;
     int integer_part = (int)result;
-    
+
     result = (result - integer_part) * pow(10, 8);
     int decimal_part = (int)result;
-    
+
     char aux[40];
-    if (isNegative == 1) {
+    if (isNegative == 1)
+    {
         decimal_part = -decimal_part;
-        if(integer_part == 0) {
+        if (integer_part == 0)
+        {
             *aux = '-';
-            int len = numToStr(integer_part, aux+1, 10);
-            aux[len+1] = '.';
+            int len = numToStr(integer_part, aux + 1, 10);
+            aux[len + 1] = '.';
             numToStr(decimal_part, aux + len + 2, 10);
             strcpy(auxBuffer, aux);
             return;
@@ -243,16 +248,15 @@ void doubleToString(long double result, char *auxBuffer)
     strcpy(auxBuffer, aux);
 }
 
-
-int readNumFromLine(char * dest)
+int readNumFromLine(char *dest)
 {
     auxBuffer[0] = 0;
     currentIdx = 0;
     int c;
-    int pointFlag=0;
-    int errorFlag=0;
-    while ((c = getChar()) != '\n' )
-    {    
+    int pointFlag = 0;
+    int errorFlag = 0;
+    while ((c = getChar()) != '\n')
+    {
         if (c == BSPACE)
         {
             if (currentIdx > 0)
@@ -263,78 +267,85 @@ int readNumFromLine(char * dest)
             }
         }
         else if (c != 0)
-        {            
+        {
             if (currentIdx < BSIZE - 1)
             {
-                if( (c == '-' && currentIdx != 0) || (pointFlag && c == '.') )  {
-                    putChar(c); 
+                if ((c == '-' && currentIdx != 0) || (pointFlag && c == '.'))
+                {
+                    putChar(c);
                     auxBuffer[currentIdx++] = c;
-                    errorFlag= 1;
+                    errorFlag = 1;
                 }
-                if( (c <= '9' && c >= '0') || c == '.' || c == '-'){
-                    putChar(c); 
-                    if(c == '.')
+                if ((c <= '9' && c >= '0') || c == '.' || c == '-')
+                {
+                    putChar(c);
+                    if (c == '.')
                         pointFlag = 1;
                     auxBuffer[currentIdx++] = c;
-
                 }
-                else {
-                    putChar(c); 
+                else
+                {
+                    putChar(c);
                     auxBuffer[currentIdx++] = c;
                     errorFlag = 1;
                 }
             }
         }
     }
-    if(errorFlag ==1)
+    if (errorFlag == 1)
         return -1;
-    if(currentIdx == 0)
+    if (currentIdx == 0)
         return -1;
     putChar('\n');
     auxBuffer[currentIdx++] = '\0';
     strcpy(dest, auxBuffer);
     return currentIdx;
 }
-//Copia del destino HASTA el punto
- int strcpyTilPoint(char *destination, const char *source)
- {
-    int i = 0;
-    while (*source != '\0' && *source!= '.')
-    {
-         *destination = *source;
-         destination++;
-         source++;
-         i++;
-    }
 
+//Copia del destino HASTA el punto
+int strcpyTilPoint(char *destination, const char *source)
+{
+    int i = 0;
+    while (*source != '\0' && *source != '.')
+    {
+        *destination = *source;
+        destination++;
+        source++;
+        i++;
+    }
     *destination = '\0';
     return i;
- }
+}
 
-void stringToDouble(char * string, long double * num){
+void stringToDouble(char *string, long double *num)
+{
     char intPart[20];
-    char doublePart[20]={0};
+    char doublePart[20] = {0};
 
     int idxTilPoint = strcpyTilPoint(intPart, string);
-    if(idxTilPoint != strlen(string)) {
+    if (idxTilPoint != strlen(string))
+    {
         strcpy(doublePart, string + idxTilPoint + 1);
     }
-    
+
     int ipart, dpart;
 
     ipart = strToInt(intPart);
     dpart = strToInt(doublePart);
-    *num = ipart + (long double) dpart / pow(10, strlen(doublePart)); 
+    *num = ipart + (long double)dpart / pow(10, strlen(doublePart));
 }
 
-void printUser(char * name) {
+void printUser(char *name)
+{
     _write(name, 0x51AEAE);
 }
 
-void printError(char * err) {
+void printError(char *err)
+{
     _write(err, 0xFF0000);
 }
 
-void printTitle(char * title) {
+void printTitle(char *title)
+{
     _write(title, 0x8791D4);
 }
