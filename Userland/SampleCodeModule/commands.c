@@ -141,7 +141,6 @@ void quadratic()
         }
         stringToDouble(buffs[i], &abcNum[i]);
     }
-    //printf("%s\n",abcNum[0]);
     int aux = _quadratic(&abcNum[0], &abcNum[1], &abcNum[2], &r1, &r2);
     if (aux == 0)
     {

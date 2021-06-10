@@ -14,7 +14,6 @@ unsigned char mayuscFlag = 0;
 unsigned char buffer[BUFFER_SIZE]={0};
 unsigned int buffIndex = 0;
 
-//IMPORTANTE, TENEMOS QUE ACLARAR EN EL INFORME EL TIPO DE TECLADO QUE ASUMIMOS
 const char ascii_values[0x56][2] =
 {
     {-1,-1},

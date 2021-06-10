@@ -1,11 +1,11 @@
 #include <stdint.h>
-#include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
 #include <idtLoader.h>
 #include <exceptions.h>
 #include <sysHandler.h>
 #include <naiveConsole.h>
+
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;

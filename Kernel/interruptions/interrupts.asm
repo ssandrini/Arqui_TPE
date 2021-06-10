@@ -174,8 +174,6 @@ _int80Handler:
 	call sysHandler
 	
 	popState
-	;mov al, 20h
-	;out 20h, al
 	iretq
 
 _RTC:
