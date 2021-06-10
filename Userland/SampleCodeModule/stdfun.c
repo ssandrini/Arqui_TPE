@@ -242,23 +242,9 @@ void doubleToString(long double result, char *auxBuffer)
     int isNegative = (result < 0) ? 1 : 0;
     int integer_part = (int)result;
     int i;
-    /*
-    r = 0.00014
-    1 paso : 0.0014 
-    2 paso : 0.014
-    4 paso : 1.4
-    for()
-        aux[i] = '0';
-    aux+i
-    pDEcimal = (r - pEntera) * 10^8
-*/
     result = (result - integer_part); 
     for(i=0; (int) result == 0 && i <= 8; i++){
         result *= 10;
-        //0.0014 i=1
-        //0.014 i=2
-        //0.14 i=3
-        //1.4 i=4
     }
     i--;
     result *= pow(10,8-i);
