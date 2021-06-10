@@ -31,13 +31,15 @@ const char ascii_values[0x56][2] =
     {0,0}
 };
 
-char keyPressed(){
+char keyPressed()
+{
 	return _keyPressed();
 }
 
 void keyboard_handler() 
 {
-    if(keyPressed()){ 
+    if(keyPressed())
+    { 
         unsigned char key = _getKey();
         switch (key)
         {
@@ -61,22 +63,26 @@ void keyboard_handler()
     return;
 }
 
-char getAscii(unsigned int key) {
+char getAscii(unsigned int key)
+{
     if(mayuscFlag)
         return ascii_values[key][1];
     else
         return ascii_values[key][0];
 }
 
-void removeBuffer() {
+void removeBuffer() 
+{
     buffer[0] = 0;
     buffIndex = 0;
 }
 
-unsigned char * getBuffer() {
+unsigned char * getBuffer() 
+{
     return buffer;
 }
 
-unsigned int getBufferSize() {
+unsigned int getBufferSize() 
+{
     return buffIndex;
 }

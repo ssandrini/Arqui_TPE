@@ -6,15 +6,17 @@
 #define INVALID_OPERATION_ID 6
 
 // valores de retorno de la excepcion
-uint64_t * ipReturn;
-uint64_t * rspReturn;
+uint64_t *ipReturn;
+uint64_t *rspReturn;
 
-void exceptionDispatcher(uint64_t exception, uint64_t * stackFrame) {
-	// por ahora manejamos estas dos excepciones	
-	if (exception == (uint64_t) 0 ) {
+void exceptionDispatcher(uint64_t exception, uint64_t *stackFrame)
+{
+	// por ahora manejamos estas dos excepciones
+	if (exception == (uint64_t)0)
+	{
 		zero_division();
 	}
-	else if(exception == INVALID_OPERATION_ID)
+	else if (exception == INVALID_OPERATION_ID)
 		invalid_operation();
 	// en todas se imprimen los registros y se resetea
 	registerPrint(stackFrame);
@@ -25,54 +27,64 @@ void exceptionDispatcher(uint64_t exception, uint64_t * stackFrame) {
 }
 
 // setea los registros de retorno
-void setAddresses(uint64_t * ip, uint64_t * rsp) {
+void backAddresses(uint64_t *ip, uint64_t *rsp)
+{
 	ipReturn = ip;
 	rspReturn = rsp;
 }
 
-void invalid_operation(){
+void invalid_operation()
+{
 	ncPrint("Invalid code of operation", 0xFF0000);
 	ncNewLine();
 }
 
-void zero_division() {
-	ncPrint("Zero division error ",0xFF0000);
+void zero_division()
+{
+	ncPrint("Zero division error ", 0xFF0000);
 	ncNewLine();
 }
 
-void registerPrint(uint64_t * stackFrame) {
+void registerPrint(uint64_t *stackFrame)
+{
 	char buffer[9];
-	static const char *registersName[] = { "R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
-	for (int i = 0; i < 19; i++) {
-		ncPrint(registersName[i],0xFF0000);
+	static const char *registersName[] = {"R15:   ", "R14:   ", "R13:   ", "R12:   ", "R11:   ", "R10:   ", "R9:    ", "R8:    ", "RSI:   ", "RDI:   ", "RBP:   ", "RDX:   ", "RCX:   ", "RBX:   ", "RAX:   ", "RIP:   ", "CS:    ", "FLAGS: ", "RSP:   "};
+	for (int i = 0; i < 19; i++)
+	{
+		ncPrint(registersName[i], 0xFF0000);
 		uintToBase(stackFrame[i], buffer, 16);
 		intToHexaStr(buffer);
-		ncPrint(buffer,0xFF0000);
-		if (i> 0 && i % 3 == 0) {
+		ncPrint(buffer, 0xFF0000);
+		if (i > 0 && i % 3 == 0)
+		{
 			ncNewLine();
-		} else {
-			ncPrint("  ",0xFF0000);
+		}
+		else
+		{
+			ncPrint("  ", 0xFF0000);
 		}
 	}
 	_sti();
-	ncPrint("La pantalla se reiniciara en ",0xFF0000);
+	ncPrint("La pantalla se reiniciara en ", 0xFF0000);
 	char buff[3] = {0};
-	// espera a una interrupcion
-	_hlt();
+	_hlt(); // aca lo cortamos hasta que el timer tick nos interrumpa
 	int init_time = seconds_elapsed();
 	int aux = 10;
 	int i = 10;
 	uintToBase(i, buff, 10);
-	ncPrint(buff,0xFF0000);
+	ncPrint(buff, 0xFF0000);
 	deleteCursor();
-	while (i > 0) {
+	while (i > 0)
+	{
 		_hlt();
 		aux = 10 - (seconds_elapsed() - init_time);
-		if (i != aux) {
-			char bspace[2] = {B_SPACE,0};
-			ncPrint(bspace,0xFF0000); 
-			if (i == 10) {
-				ncPrint(bspace,0xFF0000);
+		if (i != aux)
+		{
+			char bspace[2] = {B_SPACE, 0};
+			ncPrint(bspace, 0xFF0000);
+			if (i == 10)
+			{
+				ncPrint(bspace, 0xFF0000);
 			}
 			i = aux;
 			uintToBase(i, buff, 10);

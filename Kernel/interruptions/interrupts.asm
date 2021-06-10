@@ -154,18 +154,6 @@ haltcpu:
 	hlt
 	ret
 
-;_getKey:
- ;   push rbp
-  ;  mov rbp, rsp
-
-   ; mov rax, 0
-    ;mov al, 1
-    ;out 64h, al
-    ;in al, 60h
-
-    ;mov rsp, rbp
-    ;pop rbp
-    ;ret
 _keyPressed:
 	in al,64h
 	and al,0x01 
@@ -190,10 +178,6 @@ _int80Handler:
 	;out 20h, al
 	iretq
 
-; en rdi viene el parametro que te permite elegir el dato del RTC
-; 0 = sec
-; 2 = min
-; RTC(2)
 _RTC:
 	push rbp
 	mov rbp, rsp

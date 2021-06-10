@@ -5,8 +5,8 @@ char info[11][150] = { "desplega el dia y la hora del sistema\n", "imprime en pa
                     "realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
                     "despliega los features del procesador\n","demuestra la excepcion de division por cero\n", 
                     "demuestra la excepcion de operacion invalida\n", "obtiene las raices de la funcion quadratica deseada\n",
-                    "borra toda la pantalla\n", "pasa la temperatura de celsius a fahrenheit \n", 
-                    "pasa la temperatura de fahrenheit a celsius \n", "convierte coordenadas rectangulares en polares \n"};
+                    "borra toda la pantalla\n", "realiza la conversion de grados celsius a fahrenheit \n", 
+                    "realiza la conversion de grados fahrenheit a celsius \n", "convierte coordenadas rectangulares en polares \n"};
 
 void help()
 {

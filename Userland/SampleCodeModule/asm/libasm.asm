@@ -158,10 +158,10 @@ _CtoFahren:
     push rbp              ; armado del stackframe
     mov rbp, rsp
     fninit
-    fld tword [rsi]          ; st0 = 5/9
-    fld tword [rdi]          ; st0 = deg    ; st1 = 5/9
-    fmulp                    ; st0 = deg * 5/9
-    fld tword [rdx]          ; st0 = 32     ; st1 =  deg * 5/9  
+    fld tword [rsi]          
+    fld tword [rdi]          
+    fmulp                    
+    fld tword [rdx]          
     faddp 
     fstp  tword[rcx]
     mov rsp, rbp
