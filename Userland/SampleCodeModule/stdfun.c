@@ -238,6 +238,7 @@ int pow(int base, int e)
 
 void doubleToString(long double result, char *auxBuffer)
 {
+    
     int isNegative = (result < 0) ? 1 : 0;
     int integer_part = (int)result;
     int i;
@@ -250,7 +251,6 @@ void doubleToString(long double result, char *auxBuffer)
         aux[i] = '0';
     aux+i
     pDEcimal = (r - pEntera) * 10^8
-
 */
     result = (result - integer_part); 
     for(i=0; (int) result == 0 && i <= 8; i++){
@@ -374,7 +374,11 @@ void stringToDouble(char *string, long double *num)
 
     ipart = strToInt(intPart);
     dpart = strToInt(doublePart);
-    *num = ipart + (long double)dpart / pow(10, strlen(doublePart));
+    if(ipart < 0)
+        *num = ipart - (long double)dpart / pow(10, strlen(doublePart));
+    else {
+        *num = ipart + (long double)dpart / pow(10, strlen(doublePart));
+    }
 }
 
 void printUser(char *name)

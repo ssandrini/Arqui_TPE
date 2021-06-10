@@ -16,7 +16,7 @@ int firstTab;
 int exit = 0;
 int exitUser;
 
-void (*func_ptr[COMMANDS_SIZE])() = {help, getTime, inforeg, getMem, cpuid, exc0Trigger, exc6Trigger, quadratic, clear};
+void (*func_ptr[COMMANDS_SIZE])() = {help, getTime, inforeg, getMem, cpuid, exc0Trigger, exc6Trigger, quadratic, clear, celsius, fahrenheit, polar};
 
 void shell()
 {

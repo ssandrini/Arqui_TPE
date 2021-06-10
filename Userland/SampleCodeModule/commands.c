@@ -1,15 +1,16 @@
 #include <commands.h>
 #define EPSILON 0.00000001
-char commandsNames[9][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic", "clear"};
-char info[8][150] = { "desplega el dia y la hora del sistema\n", "imprime en pantalla el valor de todos los registros\n", 
+char commandsNames[12][20] = {"help", "time", "inforeg", "printmem", "cpuid", "trigger0", "trigger6", "quadratic", "clear", "celsius", "fahrenheit", "polar"};
+char info[11][150] = { "desplega el dia y la hora del sistema\n", "imprime en pantalla el valor de todos los registros\n", 
                     "realiza un volcado de memoria de 32 bytes a partir de la direccion recibida como argumento \n",
                     "despliega los features del procesador\n","demuestra la excepcion de division por cero\n", 
                     "demuestra la excepcion de operacion invalida\n", "obtiene las raices de la funcion quadratica deseada\n",
-                    "borra toda la pantalla\n"};
+                    "borra toda la pantalla\n", "pasa la temperatura de celsius a fahrenheit \n", 
+                    "pasa la temperatura de fahrenheit a celsius \n", "convierte coordenadas rectangulares en polares \n"};
 
 void help()
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 11; i++)
     {
         printTitle(commandsNames[i+1]); 
         printf(": %s", info[i]);
@@ -50,8 +51,6 @@ void inforeg()
 void getMem(char *param)
 {
     uint8_t * dir = (uint8_t * ) hexaStrToDir(param);
-    // uint32_t * dir = hexaStrToDir(param);
-   // uint8_t * dir = (uint8_t * )dir_aux;
     uint8_t vec[32]; // 32 "registros" de 1 byte 
     _getMem(dir, vec);
     printTitle("Volcado de memoria byte a byte a partir de la direccion solicitada: \n");
@@ -105,6 +104,10 @@ int checkCommand(char *buffer, char *parameter)
                     else
                         return -1;
                 }
+                if( j >= LENGTH_PRINTMEM + 1 + 8 ) {
+                    printError("La direccion debe estar entre 00000000 y FFFFFFF\n");
+                    return -1;
+                }
                 *parameter = 0;
                 return i;
             }
@@ -138,8 +141,7 @@ void quadratic()
         }
         stringToDouble(buffs[i], &abcNum[i]);
     }
-
-   
+    //printf("%s\n",abcNum[0]);
     int aux = _quadratic(&abcNum[0], &abcNum[1], &abcNum[2], &r1, &r2);
     if (aux == 0)
     {
@@ -150,10 +152,9 @@ void quadratic()
         char root1[60];
         char root2[60];
         doubleToString(r1, root1);
-        doubleToString(r2, root2);
-
         printTitle("root1");
         printf(" = %s \n", root1);
+        doubleToString(r2, root2);
         printTitle("root2");
         printf(" = %s \n", root2);
     }
@@ -241,4 +242,77 @@ void cpuid()
         aux = 1;
     printTitle(snamesr2);
     printf(" : %s  \n", aux == 1 ? "SI" : "NO");
+}
+
+void celsius() {
+    long double deg_c, res;
+    long double c1 = (double) 9/5;
+    long double c2 = 32;
+    char buff[60];
+    printf("Ingrese el valor de temperatura en grados celcius para convertirlo a grados fahrenheit\n");
+    printf("C = ");
+    int length = readNumFromLine(buff);
+    if (length <= -1)
+    {
+        printf("\nValor incorrecto. Debe ser un numero.\n");
+        return;
+    }
+    
+    stringToDouble(buff, &deg_c);
+    _CtoFahren(&deg_c, &c1, &c2, &res);
+
+    char ans[60];
+    doubleToString(res, ans);
+    printf("Fahrenheit = %s F\n",ans);
+}
+
+void fahrenheit() {
+    long double deg_c, res;
+    long double c1 = (double) 5/9;
+    long double c2 = 32;
+    char buff[60];
+    printf("Ingrese el valor de temperatura en grados fahrenheit para convertirlo a grados celsius\n");
+    printf("F = ");
+    int length = readNumFromLine(buff);
+    if (length <= -1)
+    {
+        printf("\nValor incorrecto. Debe ser un numero.\n");
+        return;
+    }
+    
+    stringToDouble(buff, &deg_c);
+    _FtoCelcius(&deg_c, &c1, &c2, &res);
+
+    char ans[60];
+    doubleToString(res, ans);
+    printf("Celsius = %s C\n",ans);
+}
+
+void polar() {
+    //extern void _rectToPolar(long double * x, long double * y, long double * mod, long double * angle, long double * c);
+    long double rects[2];
+    long double c = 180;
+    long double ans[2];
+    char buffs[2][60];
+    char xy[2]={'X','Y'};
+    printf("Ingrese las coordenadas X e Y que desee convertir a polares\n");
+    for (int i = 0; i < 2; i++)
+    {
+        printf("%c = ", xy[i]);
+        int length = readNumFromLine(buffs[i]);
+        if (length <= -1)
+        {
+            printf("\nValor incorrecto. Debe ser un numero.\n");
+            return;
+        }
+        stringToDouble(buffs[i], &rects[i]);
+    }
+   
+    _rectToPolar(&rects[0], &rects[1], &ans[0], &ans[1], &c);
+
+    char stringAns[60];
+    doubleToString(ans[0], stringAns);
+    printf("Modulo = %s \n",stringAns);
+    doubleToString(ans[1], stringAns);
+    printf("Angulo = %s grados\n",stringAns);
 }
