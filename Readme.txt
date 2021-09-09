@@ -29,3 +29,4 @@ From the x64BareBones project directory run:
 
 Author: Rodrigo Rearden (RowDaBoat)
 Collaborator: Augusto Nizzo McIntosh
+Further Updates: Santiago Sandrini, Sol Konfederak, Florencia Chao
